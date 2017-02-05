@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><h:outputText
+			value="#{msgs.nomeAplicacao} - #{msgs.empresa}" /></title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+	<h:outputStylesheet library="bootstrap"
+		name="css/bootstrap.min.css" />
+	<h:outputScript library="js" name="locales-pf.js" />
+	<h:outputScript library="js" name="scripts.js" />
+</h:head>
+<h:body>
+	<p:growl id="msgGlobal" life="8000" />
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north">
+			<h2>
+				<b><h:outputText style="margin-left:10px;"
+						value="#{msgs.nomeAplicacao} #{msgs.versaoAplicacao} - #{msgs.empresa}" /></b>
+			</h2>
+			<ui:insert name="menu" />
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<div class="container-fluid">
+				<ui:insert name="conteudo" />
+			</div>
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</html>

@@ -10,17 +10,19 @@
 	<p:menubar>
 		<p:menuitem icon="ui-icon-home" title="#{msgs.home}" outcome="/pages/inicio.xhtml"/>
         <p:submenu label="#{msgs.mnuCadastrar}" icon="ui-icon-document">
-            <p:menuitem value="#{msgs.sub1mnu1}" icon="ui-icon-contact" outcome="/pages/imovel.xhtml"/>
-            <p:menuitem value="#{msgs.sub2mnu1}" icon="ui-icon-contact" outcome="/pages/negocio.xhtml"/>
+    	    <p:menuitem value="#{msgs.opPessoas}" icon="ui-icon-contact" outcome="/pages/pessoa.xhtml"/>
+    	    <p:menuitem value="#{msgs.opClientes}" icon="ui-icon-contact" outcome="/pages/cliente.xhtml"/>
+            <p:menuitem value="#{msgs.opImoveis}" icon="ui-icon-contact" outcome="/pages/imovel.xhtml"/>
+            <p:menuitem value="#{msgs.opNegocios}" icon="ui-icon-contact" outcome="/pages/negocio.xhtml"/>
 			<p:separator />          
-            <p:menuitem value="#{msgs.sub3mnu1}" url="#" />
-            <p:menuitem value="#{msgs.sub4mnu1}" url="#" />
-            <p:menuitem value="#{msgs.subMnuUsuarios}" outcome="/pages/usuario.xhtml" />
+            <p:menuitem value="#{msgs.opTipImoveis}" url="#" />
+            <p:menuitem value="#{msgs.opTipNegocios}" url="#" />
+            <p:menuitem value="#{msgs.opUsuarios}" outcome="/pages/usuario.xhtml" />
         </p:submenu> 
          <p:submenu label="#{msgs.mnuAjuda}" icon="ui-icon-document">
-            <p:menuitem value="#{msgs.sub1mnu2}" icon="ui-icon-contact"/>
+            <p:menuitem value="#{msgs.opConfig}" icon="ui-icon-contact"/>
 			<p:separator />          
-            <p:menuitem value="#{msgs.sub2mnu2}" url="#" />
+            <p:menuitem value="#{msgs.opSobre}" url="#" />
         </p:submenu> 
         <f:facet name="options">
             <p:inputText style="margin-right:10px" placeholder="#{msgs.buscar}"/>

@@ -33,7 +33,7 @@ public class Pessoa extends GenericDomain {
 	private Short numero;
 
 	@Column(length = 30)
-	private String Bairro;
+	private String bairro;
 
 	@Column(length = 40)
 	private String complemento;
@@ -72,6 +72,7 @@ public class Pessoa extends GenericDomain {
 
 	private Long usuarioAtualizacao;
 
+	
 	public String getNome() {
 		return nome;
 	}
@@ -129,11 +130,11 @@ public class Pessoa extends GenericDomain {
 	}
 
 	public String getBairro() {
-		return Bairro;
+		return bairro;
 	}
 
 	public void setBairro(String bairro) {
-		Bairro = bairro;
+		this.bairro = bairro;
 	}
 
 	public String getComplemento() {
@@ -231,6 +232,7 @@ public class Pessoa extends GenericDomain {
 	public void setUsuarioAtualizacao(Long usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
+
 
 	
 	

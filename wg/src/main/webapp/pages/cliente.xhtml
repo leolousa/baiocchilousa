@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/principal.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml"></ui:include>
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h3>
+			<h:outputText value="#{msgs.cadClientes}" />
+		</h3>
+		<h:form id="frmgridClientes">
+			<p:toolbar id="mnuOp">
+				<f:facet name="left">
+					<p:commandButton value="#{msgs.novoCliente}"
+						actionListener="#{MBImovel.prepararNovo()}"
+						oncomplete="PF('dlgNovoCliente').show()"
+						update=":frmClienteNovo:pnlClienteNovo" />
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable id="gridClientes" var="cliente" widgetVar="tblClientes" styleClass="table"
+				filteredValue="#{MBImovel.imoveisFiltrados}"
+				value="#{MBImovel.imoveis}" rows="10" paginator="true"
+				emptyMessage="#{msgs.semDados}"
+				rowKey="#{cliente.id}" selection="#{MBImovel.cliente}"
+				selectionMode="single"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,30,50,100">
+				
+				<p:column headerText="ID" style="width:60px;text-align:center;">
+					<h:outputText value="#{cliente.id}" />
+				</p:column>
+
+				<p:column headerText="#{msgs.status}" sortBy="#{cliente.ativo}"
+					style="width:60px;text-align:center;">
+					<h:graphicImage rendered="#{cliente.ativo}" title="#{msgs.ativo}" library="img" name="ativo.png"/>
+					<h:graphicImage rendered="#{!cliente.ativo}" title="#{msgs.inativo}" library="img" name="inativo.png"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.nome}" sortBy="#{cliente.pessoa.nome}"
+					style="width:400px;" filterBy="#{cliente.pessoa.nome}"
+					filterMatchMode="contains">
+					<h:outputText value="#{cliente.pessoa.nome}" />
+				</p:column>
+				
+				<p:column headerText="#{msgs.endereco}" sortBy="#{cliente.pessoa.endereco}"
+					style="width:400px;" filterBy="#{cliente.pessoa.endereco}"
+					filterMatchMode="contains">
+					<h:outputText value="#{cliente.pessoa.endereco}" />
+				</p:column>				
+
+				<p:column headerText="#{msgs.cadastroEm}" sortBy="#{cliente.tsRegistro}"
+					style="width:100px;text-align:center;">
+					<h:outputText value="#{cliente.tsRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msgs.atualizadoEm}"
+					sortBy="#{cliente.tsAtualizacao}"
+					style="width:100px;text-align:center;">
+					<h:outputText value="#{cliente.tsAtualizacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msgs.comandos}">
+					<p:commandButton title="#{msgs.desativarCliente}"
+						rendered="#{cliente.ativo}" icon="ui-icon-closethick"
+						oncomplete="PF('dlgAtiDesCliente').show()"
+						update=":frmClienteConfirmar:pnlClienteConfirmar">
+						<f:setPropertyActionListener value="#{cliente}"
+							target="#{MBImovel.imovel}" />
+					</p:commandButton>
+					<p:commandButton title="#{msgs.ativarCliente}"
+						rendered="#{!cliente.ativo}" icon="ui-icon-check"
+						oncomplete="PF('dlgAtiDesCliente').show()"
+						update=":frmClienteConfirmar:pnlClienteConfirmar">
+						<f:setPropertyActionListener value="#{cliente}"
+							target="#{MBImovel.imovel}" />
+					</p:commandButton>
+					<p:commandButton title="#{msgs.editarCliente}" icon="ui-icon-pencil"
+						oncomplete="PF('dlgEditarCliente').show()"
+						update=":frmClienteEditar:pnlClienteEditar">
+						<f:setPropertyActionListener value="#{imovel}"
+							target="#{MBImovel.imovel}" />
+					</p:commandButton>
+					<p:commandButton title="#{msgs.excluirCliente}" icon="ui-icon-trash"
+						oncomplete="PF('dlgExcluirCliente').show()"
+						update=":frmClienteExcluir:pnlClienteExcluir">
+						<f:setPropertyActionListener value="#{imovel}"
+							target="#{MBImovel.imovel}" />
+					</p:commandButton>					
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+
+		<p:dialog header="#{msgs.cadastrarNovoCliente}" widgetVar="dlgNovoCliente"
+			responsive="true" modal="true" appendTo="@(body)" resizable="false"
+			closable="true" draggable="false" height="520" width="1000">
+			<h:form id="frmClienteNovo">
+				<h:panelGrid id="pnlClienteNovo" columns="2">
+					<p:outputLabel value="Pessoa:" for="cdPessoa"/>
+					<p:selectOneMenu id="cdPessoa" value="#{MBImovel.cliente.pessoa.id}" required="true"
+						requiredMessage="#{msgs.msgCampoObrigatorio}" converter="generic">
+						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
+						<f:selectItems value="#{MBImovel.pessoas}" var="pessoa" itemLabel="#{pessoa.nome}" itemValue="#{pessoa}"/>
+					</p:selectOneMenu>
+					<p:toolbar>
+						<f:facet name="right">
+							<p:commandButton value="#{msgs.gravar}"
+								actionListener="#{MBImovel.novoImovel}"
+								oncomplete="verificar(xhr, status, args, 'dlgNovoCliente', 'tblClientes');"
+								update=":frmgridClientes:gridClientes :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+							<p:commandButton value="#{msgs.cancelar}" process="@this"
+								onclick="PF('dlgNovoCliente').hide()">
+								<p:resetInput target="pnlClienteNovo"/>
+							</p:commandButton>
+						</f:facet>
+					</p:toolbar>
+				</h:panelGrid>
+				<p:outputLabel value="* #{msgs.obrigatorio}"/>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="#{msgs.excluirCliente}" widgetVar="dlgExcluirCliente"
+			modal="true" appendTo="@(body)" resizable="false" closable="true"
+			draggable="false" height="180" width="550">
+			<h:form id="frmClienteExcluir">
+				<p><b><h:outputText value="#{msgs.msgExcluirCliente}" /></b></p>
+				<h:panelGrid id="pnlClienteExcluir" columns="2">
+					<h:outputLabel value="#{msgs.codigo}" />
+					<h:outputText value="#{MBImovel.cliente.id}" />
+					<h:outputLabel value="#{msgs.nome}" />
+					<h:outputText value="#{MBImovel.cliente.pessoa.nome}" />
+				</h:panelGrid>
+				<p>
+					<h:panelGrid columns="1">
+						<p:toolbar style="width:500px">
+							<f:facet name="right">
+								<p:commandButton value="#{msgs.sim}"
+									actionListener="#{MBImovel.excluirImovel}"
+									oncomplete="PF('dlgExcluirCliente').hide();"
+									update=":frmgridClientes:gridClientes :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+								<p:commandButton value="#{msgs.cancelar}" process="@this"
+									onclick="PF('dlgExcluirCliente').hide()" />
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+				</p>
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog header="#{msgs.ativarDesativarCliente}" widgetVar="dlgAtiDesCliente"
+			modal="true" appendTo="@(body)" resizable="false" closable="true"
+			draggable="false" height="180" width="550">
+			<h:form id="frmClienteConfirmar">
+				<p>
+					<b> <h:outputText rendered="#{!MBImovel.flagAtivar}"
+							value="#{msgs.msgAtivarCliente}" /> <h:outputText
+							rendered="#{MBImovel.flagAtivar}"
+							value="#{msgs.msgDesativarCliente}" /></b>
+				</p>
+				<h:panelGrid id="pnlClienteConfirmar" columns="2">
+					<h:outputLabel value="#{msgs.codigo}" />
+					<h:outputText value="#{MBImovel.cliente.id}" />
+					<h:outputLabel value="#{msgs.nome}" />
+					<h:outputText value="#{MBImovel.cliente.pessoa.nome}" />
+				</h:panelGrid>
+				<p>
+					<h:panelGrid columns="1">
+						<p:toolbar style="width:500px">
+							<f:facet name="right">
+								<p:commandButton value="#{msgs.sim}"
+									actionListener="#{MBImovel.ativarDesativar}"
+									oncomplete="PF('dlgAtiDesCliente').hide();"
+									update=":frmgridClientes:gridClientes :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+								<p:commandButton value="#{msgs.cancelar}" process="@this"
+									onclick="PF('dlgAtiDesCliente').hide()"/>
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+				</p>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="#{msgs.editarCliente}" widgetVar="dlgEditarCliente"
+			modal="true" appendTo="@(body)" resizable="false" closable="true"
+			draggable="false" height="520" width="1000">
+			<h:form id="frmClienteEditar">
+				<h:panelGrid id="pnlClienteEditar" columns="2">
+					<p:outputLabel value="ID"/>
+					<h:outputText value="#{MBImovel.cliente.id}" />
+					<p:outputLabel value="#{msgs.tipo}" for="cdTiposEdt" />
+					<p:selectOneMenu id="cdTiposEdt" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}">
+						<f:selectItem itemLabel="#{MBImovel.imovel.idTipoImovel.nome}" itemValue="#{MBImovel.imovel.idTipoImovel}"/>
+						<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
+					</p:selectOneMenu>
+					<p:outputLabel value="#{msgs.codigo}" />
+					<p:inputText size="30" maxlength="20" placeholder="#{msgs.codigo}"
+						value="#{MBImovel.imovel.codigo}" />
+					<p:outputLabel value="#{msgs.nome}" for="edtNome" />
+					<p:inputText id="edtNome" size="60" maxlength="50" placeholder="#{msgs.nome}" required="true"
+						 requiredMessage="#{msgs.msgCampoObrigatorio}" value="#{MBImovel.imovel.nome}" />
+					<p:outputLabel value="#{msgs.descricao} " for="edtDesc" />
+					<p:editor id="edtDesc" value="#{MBImovel.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+					<p:selectBooleanCheckbox value="#{MBImovel.imovel.ativo}" itemLabel="#{msgs.ativo}" 
+						required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+					<p:toolbar>
+						<f:facet name="right">
+							<p:commandButton value="#{msgs.gravar}"
+								actionListener="#{MBImovel.editarImovel}"
+								oncomplete="verificar(xhr, status, args, 'dlgEditarCliente', 'tblClientes');"
+								update=":frmgridClientes:gridClientes :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+							<p:commandButton value="#{msgs.cancelar}" process="@this"
+								onclick="PF('dlgEditarCliente').hide()">
+								<p:resetInput target="pnlClienteEditar"/>
+							</p:commandButton>
+						</f:facet>
+					</p:toolbar>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

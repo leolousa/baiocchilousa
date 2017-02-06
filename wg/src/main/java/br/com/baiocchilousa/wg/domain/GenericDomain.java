@@ -36,6 +36,8 @@ public class GenericDomain implements Serializable {
 		this.id = id;
 	}
 	
+	
+	//Método utilizado para montar os objetos e imprimir nos p:selectOneMenu
 	@Override
 	public String toString() {
 	    return String.format("%s[id=%d]", getClass().getSimpleName(), getId());

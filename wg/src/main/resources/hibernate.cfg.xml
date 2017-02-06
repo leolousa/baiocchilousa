@@ -26,12 +26,12 @@
 		<!-- Cache de Segundo Nível -->
 		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
 
-		<!-- Mostra as SQLs Geradas -->
-		<property name="show_sql">true</property>
+		<!-- Mostra as SQLs Geradas (true, false) -->
+		<property name="show_sql">false</property>
 		<property name="hibernate.format_sql">false</property>
 
 		<!-- Cria as tabelas do banco de dados (create, update, validate)-->
-		<property name="hibernate.hbm2ddl.auto">create</property>
+		<property name="hibernate.hbm2ddl.auto">validate</property>
 		
 		<!-- Relação das entidades do BD -->
 		<mapping class="br.com.baiocchilousa.wg.domain.Cidade" />

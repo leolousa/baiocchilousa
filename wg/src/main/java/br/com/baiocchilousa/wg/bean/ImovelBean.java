@@ -1,6 +1,7 @@
 package br.com.baiocchilousa.wg.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,21 +14,33 @@ import br.com.baiocchilousa.wg.dao.ImovelDAO;
 import br.com.baiocchilousa.wg.dao.TipoImovelDAO;
 import br.com.baiocchilousa.wg.domain.Imovel;
 import br.com.baiocchilousa.wg.domain.TipoImovel;
+import br.com.baiocchilousa.wg.domain.Usuario;
 
-@ManagedBean(name = "MBImovel")
+/**
+ * Classe Managed Bean do domínio Imovel.
+ * 
+ * @param preparaImoveis()   Método para iniciar a tela de Cadastrar Imóveis
+ * @param novo() Método que cria um novo imóvel
+ * @param salvar() Método que salva um novo imóvel
+ * @param editar() Método que edita um imóvel existente
+ * @author     Leonardo Baiocchi Lousa
+ * @version    2.0
+ */
+
+@ManagedBean
 @ViewScoped
-public class ImovelBean implements Serializable{
+public class ImovelBean implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1798891452477731917L;
-	
-	
+
 	private List<Imovel> imoveis;
 	private List<Imovel> imoveisFiltrados;
-	private Imovel imovel;
 	private List<TipoImovel> tipos;
+	private Imovel imovel;
+
 	private boolean flagAtivar;
 
 	@PostConstruct
@@ -36,32 +49,85 @@ public class ImovelBean implements Serializable{
 		try {
 			ImovelDAO dao = new ImovelDAO();
 			imoveis = dao.listar();
-			
+
 			TipoImovelDAO daoTipo = new TipoImovelDAO();
 			tipos = daoTipo.listar();
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
 
-	public void prepararNovo() {
-		imovel = new Imovel();
-	}
+	public void novo() {
 
-	public void novoImovel() {
+		imovel = new Imovel();
 
 		try {
-			ImovelDAO dao = new ImovelDAO();
-			dao.salvar(imovel);
-			dao.listar();
-			Messages.addGlobalInfo("Imóvel gravado com sucesso!");
-		} catch (Exception e) {
+			TipoImovelDAO daoTipo = new TipoImovelDAO();
+			tipos = daoTipo.listar();
+		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 
+	}
+
+	public void salvar() {
+
+		Usuario usuario = new Usuario();
+
+		usuario.setId(1L);
+
+		try {
+			ImovelDAO imovelDAO = new ImovelDAO();
+			imovel.setAtivo(true);
+			imovel.setTsRegistro(new Date());
+			imovel.setUsuarioRegistro(usuario);
+			imovelDAO.merge(imovel);
+
+			imovel = new Imovel();
+
+			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
+
+			tipos = tipoImovelDAO.listar();
+			imoveis = imovelDAO.listar();
+
+			Messages.addGlobalInfo("Imóvel gravado com sucesso!");
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+		}
+
+	}
+
+	public void editar() {
+
+		Usuario usuario = new Usuario();
+
+		usuario.setId(1L);
+
+		try {
+			ImovelDAO imovelDAO = new ImovelDAO();
+
+			imovel.setAtivo(true);
+			imovel.setTsAtualizacao(new Date());
+			imovel.setUsuarioAtualizacao(usuario);
+
+			imovelDAO.editar(imovel);
+
+			imovel = new Imovel();
+
+			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
+
+			tipos = tipoImovelDAO.listar();
+			imoveis = imovelDAO.listar();
+			
+			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " atualizado com sucesso!");
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+		}
 	}
 
 	public void prepararAtivaDesativa() {
@@ -73,7 +139,7 @@ public class ImovelBean implements Serializable{
 
 		try {
 			ImovelDAO dao = new ImovelDAO();
-			//dao.ativarDesativar(imovel);
+			// dao.ativarDesativar(imovel);
 			imoveis = dao.listar();
 			flagAtivar = !imovel.getAtivo();
 			String msg = "";
@@ -84,34 +150,21 @@ public class ImovelBean implements Serializable{
 			}
 			Messages.addGlobalInfo(msg);
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 	}
 
-	public void editarImovel() {
-		try {
-			ImovelDAO dao = new ImovelDAO();
-			dao.editar(imovel);
-			imoveis = dao.listar();
-			Messages.addGlobalInfo("Im�vel " + imovel.getNome() + " atualizado com sucesso!");
-		} catch (Exception e) {
-			e.printStackTrace();
-			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
-		}
-	}
-	
-	
 	public void excluirImovel() {
 		try {
 			ImovelDAO dao = new ImovelDAO();
 			dao.excluir(imovel);
 			imoveis = dao.listar();
-			Messages.addGlobalInfo("Im�vel " + imovel.getNome() + " excluído com sucesso!");
-		} catch (Exception e) {
+			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " excluído com sucesso!");
+		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 	}
 

@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 //Classe de utilidades do JSF
 public class JSFUtil {
 
-//	Mensagem de Informação
+/*//	Mensagem de Informação
 	public static void mensagemSucesso(String mensagemResumida, String mensagemDetalhada){
 		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, mensagemResumida, mensagemDetalhada);
 		FacesContext contexto = FacesContext.getCurrentInstance();
@@ -26,6 +26,6 @@ public class JSFUtil {
 		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, mensagemResumida, mensagemDetalhada);
 		FacesContext contexto = FacesContext.getCurrentInstance();
 		contexto.addMessage(null, msg);
-	}
+	}*/
 	
 }

@@ -53,16 +53,16 @@
 				</p:column>
 
 				<p:column headerText="#{msgs.tipoImovel}"
-					sortBy="#{imovel.idTipoImovel.nome}" filterBy="#{imovel.idTipoImovel.id}"
+					sortBy="#{imovel.tipoImovel.nome}" filterBy="#{imovel.tipoImovel.id}"
 					filterMatchMode="exact">
 					<f:facet name="filter">
-						<p:selectOneMenu onchange="PF('tblImoveis').filter()">
+						<p:selectOneMenu onchange="PF('tblImoveis').filter()" converter="omnifaces.SelectItemsConverter">
 							<f:selectItem itemLabel="#{msgs.todos}" itemValue="#{null}"
 								noSelectionOption="true" />
-							<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo.id}"/>
+							<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
 						</p:selectOneMenu>
 					</f:facet>
-					<h:outputText value="#{imovel.idTipoImovel.nome}" />
+					<h:outputText value="#{imovel.tipoImovel.nome}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.cadastroEm}" sortBy="#{imovel.tsRegistro}"
@@ -118,8 +118,8 @@
 			<h:form id="frmImovelNovo">
 				<h:panelGrid id="pnlImovelNovo" columns="2">
 					<p:outputLabel value="Tipo:" for="cdTiposNovo"/>
-					<p:selectOneMenu id="cdTiposNovo" value="#{MBImovel.imovel.idTipoImovel}" required="true"
-						requiredMessage="#{msgs.msgCampoObrigatorio}" converter="generic">
+					<p:selectOneMenu id="cdTiposNovo" value="#{MBImovel.imovel.tipoImovel.id}" converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="#{msgs.msgCampoObrigatorio}" >
 						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
 						<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
@@ -222,8 +222,8 @@
 					<p:outputLabel value="ID"/>
 					<h:outputText value="#{MBImovel.imovel.id}" />
 					<p:outputLabel value="#{msgs.tipo}" for="cdTiposEdt" />
-					<p:selectOneMenu id="cdTiposEdt" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}">
-						<f:selectItem itemLabel="#{MBImovel.imovel.idTipoImovel.nome}" itemValue="#{MBImovel.imovel.idTipoImovel}"/>
+					<p:selectOneMenu id="cdTiposEdt" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}" converter="omnifaces.SelectItemsConverter">
+						<f:selectItem itemLabel="#{MBImovel.imovel.tipoImovel.nome}" itemValue="#{MBImovel.imovel.tipoImovel.id}"/>
 						<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.codigo}" />

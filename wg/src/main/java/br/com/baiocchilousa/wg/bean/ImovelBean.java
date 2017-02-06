@@ -7,11 +7,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.omnifaces.util.Messages;
+
 import br.com.baiocchilousa.wg.dao.ImovelDAO;
 import br.com.baiocchilousa.wg.dao.TipoImovelDAO;
 import br.com.baiocchilousa.wg.domain.Imovel;
 import br.com.baiocchilousa.wg.domain.TipoImovel;
-import br.com.baiocchilousa.wg.util.JSFUtil;
 
 @ManagedBean(name = "MBImovel")
 @ViewScoped
@@ -40,7 +41,7 @@ public class ImovelBean implements Serializable{
 			tipos = daoTipo.listar();
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSFUtil.adicionarMensagemErro("Mensagem de erro: " + e.getMessage());
+			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
 		}
 
 	}
@@ -55,10 +56,10 @@ public class ImovelBean implements Serializable{
 			ImovelDAO dao = new ImovelDAO();
 			dao.salvar(imovel);
 			dao.listar();
-			JSFUtil.adicionarMensagemSucesso("Im�vel gravado com sucesso!");
+			Messages.addGlobalInfo("Imóvel gravado com sucesso!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSFUtil.adicionarMensagemErro("Mensagem de erro: " + e.getMessage());
+			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
 		}
 
 	}
@@ -81,23 +82,23 @@ public class ImovelBean implements Serializable{
 			} else {
 				msg = "Imóvel DESATIVADO com sucesso!";
 			}
-			JSFUtil.adicionarMensagemSucesso(msg);
+			Messages.addGlobalInfo(msg);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSFUtil.adicionarMensagemErro("Mensagem de erro: " + e.getMessage());
+			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
 		}
 	}
 
 	public void editarImovel() {
 		try {
 			ImovelDAO dao = new ImovelDAO();
-			//dao.atualizar(imovel);
+			dao.editar(imovel);
 			imoveis = dao.listar();
-			JSFUtil.adicionarMensagemSucesso("Im�vel " + imovel.getNome() + " atualizado com sucesso!");
+			Messages.addGlobalInfo("Im�vel " + imovel.getNome() + " atualizado com sucesso!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSFUtil.adicionarMensagemErro("Mensagem de erro: " + e.getMessage());
+			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
 		}
 	}
 	
@@ -107,10 +108,10 @@ public class ImovelBean implements Serializable{
 			ImovelDAO dao = new ImovelDAO();
 			dao.excluir(imovel);
 			imoveis = dao.listar();
-			JSFUtil.adicionarMensagemSucesso("Im�vel " + imovel.getNome() + " exclu�do com sucesso!");
+			Messages.addGlobalInfo("Im�vel " + imovel.getNome() + " excluído com sucesso!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSFUtil.adicionarMensagemErro("Mensagem de erro: " + e.getMessage());
+			Messages.addGlobalError("Mensagem de erro: " + e.getMessage());
 		}
 	}
 

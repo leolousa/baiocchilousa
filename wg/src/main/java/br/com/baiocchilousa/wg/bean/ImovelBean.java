@@ -116,7 +116,7 @@ public class ImovelBean implements Serializable {
 
 			imovelDAO.editar(imovel);
 
-			imovel = new Imovel();
+			//imovel = new Imovel();
 
 			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
 
@@ -156,11 +156,11 @@ public class ImovelBean implements Serializable {
 		}
 	}
 
-	public void excluirImovel() {
+	public void excluir() {
 		try {
-			ImovelDAO dao = new ImovelDAO();
-			dao.excluir(imovel);
-			imoveis = dao.listar();
+			ImovelDAO imovelDAO = new ImovelDAO();
+			imovelDAO.excluir(imovel);
+			imoveis = imovelDAO.listar();
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " excluído com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();

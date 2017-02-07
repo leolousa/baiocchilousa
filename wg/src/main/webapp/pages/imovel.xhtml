@@ -166,8 +166,8 @@
 						<p:toolbar style="width:500px">
 							<f:facet name="right">
 								<p:commandButton value="#{msgs.sim}"
-									actionListener="#{imovelBean.excluirImovel}"
-									oncomplete="PF('dlgExcluirImovel').hide();"
+									actionListener="#{imovelBean.excluir}"
+									oncomplete="verificar(xhr, status, args, 'dlgExcluirImovel', 'tblImoveis');"
 									update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<p:commandButton value="#{msgs.cancelar}" process="@this"
 									onclick="PF('dlgExcluirImovel').hide()" />
@@ -239,7 +239,7 @@
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{imovelBean.editarImovel}"
+								actionListener="#{imovelBean.editar}"
 								oncomplete="verificar(xhr, status, args, 'dlgEditarImovel', 'tblImoveis');"
 								update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"

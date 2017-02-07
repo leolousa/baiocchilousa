@@ -19,16 +19,16 @@
 			<p:toolbar id="mnuOp">
 				<f:facet name="left">
 					<p:commandButton value="#{msgs.novoUsuario}"
-						actionListener="#{MBUsuario.prepararNovo()}"
+						actionListener="#{usuarioBean.novo}"
 						oncomplete="PF('dlgNovoUsuario').show()"
 						update=":frmUsuarioNovo:pnlUsuarioNovo" />
 				</f:facet>
 			</p:toolbar>
 			<p:dataTable id="gridUsuarios" var="usuario" widgetVar="tblUsuarios" styleClass="table"
-				filteredValue="#{MBUsuario.usuariosFiltrados}"
-				value="#{MBUsuario.usuarios}" rows="10" paginator="true"
+				filteredValue="#{usuarioBean.usuariosFiltrados}"
+				value="#{usuarioBean.usuarios}" rows="10" paginator="true"
 				emptyMessage="#{msgs.semDados}"
-				rowKey="#{usuario.id}" selection="#{MBUsuario.usuario}"
+				rowKey="#{usuario.id}" selection="#{usuarioBean.usuario}"
 				selectionMode="single"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="10,30,50,100">
@@ -42,10 +42,10 @@
 					<h:graphicImage rendered="#{!usuario.ativo}" title="#{msgs.inativo}" library="img" name="inativo.png"/>
 				</p:column>
 
-				<p:column headerText="#{msgs.nome}" sortBy="#{usuario.nome}"
-					style="width:400px;" filterBy="#{usuario.nome}"
+				<p:column headerText="#{msgs.nome}" sortBy="#{usuario.pessoa.nome}"
+					style="width:400px;" filterBy="#{usuario.pessoa.nome}"
 					filterMatchMode="contains">
-					<h:outputText value="#{usuario.nome}" />
+					<h:outputText value="#{usuario.pessoa.nome}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.apelido}" sortBy="#{usuario.apelido}"
@@ -55,29 +55,20 @@
 				</p:column>
 				
 				<p:column headerText="#{msgs.tipo}"
-					sortBy="#{usuario.idTipo.tipo}" filterBy="#{usuario.idTipo.id}"
+					sortBy="#{usuario.tipo.tipo}" filterBy="#{usuario.tipo.tipo}"
 					filterMatchMode="exact">
 					<f:facet name="filter">
-						<p:selectOneMenu onchange="PF('tblUsuarios').filter()">
-							<f:selectItem itemLabel="#{msgs.todos}" itemValue="#{null}"
-								noSelectionOption="true" />
-							<f:selectItems value="#{MBUsuario.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo.id}"/>
+						<p:selectOneMenu onchange="PF('tblUsuarios').filter()" converter="omnifaces.SelectItemsConverter">
+							<f:selectItem itemLabel="#{msgs.todos}" noSelectionOption="true" />
+							<f:selectItems value="#{usuarioBean.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo.id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-					<h:outputText value="#{usuario.idTipo.tipo}" />
+					<h:outputText value="#{usuario.tipo.tipo}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.cadastroEm}" sortBy="#{usuario.tsRegistro}"
 					style="width:100px;text-align:center;">
 					<h:outputText value="#{usuario.tsRegistro}">
-						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{msgs.atualizadoEm}"
-					sortBy="#{usuario.tsAlteracao}"
-					style="width:100px;text-align:center;">
-					<h:outputText value="#{usuario.tsAlteracao}">
 						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
 					</h:outputText>
 				</p:column>
@@ -88,26 +79,26 @@
 						oncomplete="PF('dlgAtiDesUsuario').show()"
 						update=":frmUsuarioConfirmar:pnlUsuarioConfirmar">
 						<f:setPropertyActionListener value="#{usuario}"
-							target="#{MBUsuario.usuario}" />
+							target="#{usuarioBean.usuario}" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.ativarUsuario}"
 						rendered="#{!usuario.ativo}" icon="ui-icon-check"
 						oncomplete="PF('dlgAtiDesUsuario').show()"
 						update=":frmUsuarioConfirmar:pnlUsuarioConfirmar">
 						<f:setPropertyActionListener value="#{usuario}"
-							target="#{MBUsuario.usuario}" />
+							target="#{usuarioBean.usuario}" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.editarUsuario}" icon="ui-icon-pencil"
 						oncomplete="PF('dlgEditarUsuario').show()"
 						update=":frmUsuarioEditar:pnlUsuarioEditar">
 						<f:setPropertyActionListener value="#{usuario}"
-							target="#{MBUsuario.usuario}" />
+							target="#{usuarioBean.usuario}" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.excluirUsuario}" icon="ui-icon-trash"
 						oncomplete="PF('dlgExcluirUsuario').show()"
 						update=":frmUsuarioExcluir:pnlUsuarioExcluir">
 						<f:setPropertyActionListener value="#{usuario}"
-							target="#{MBUsuario.usuario}" />
+							target="#{usuarioBean.usuario}" />
 					</p:commandButton>					
 				</p:column>
 			</p:dataTable>
@@ -120,30 +111,33 @@
 			<h:form id="frmUsuarioNovo">
 				<h:panelGrid id="pnlUsuarioNovo" columns="2">
 					<p:outputLabel value="Tipo:" for="cbTiposNovo"/>
-					<p:selectOneMenu id="cbTiposNovo" required="true" value="#{MBUsuario.usuario.idTipo}" converter="generic">
+					<p:selectOneMenu id="cbTiposNovo" required="true" value="#{usuarioBean.usuario.tipo}" converter="omnifaces.SelectItemsConverter">
 						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
-						<f:selectItems value="#{MBUsuario.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo}"/>
+						<f:selectItems value="#{usuarioBean.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
-					<p:outputLabel value="#{msgs.nome}" for="txtNome"/>
-					<p:inputText id="txtNome" size="60" maxlength="80" placeholder="#{msgs.nome}"
-						value="#{MBUsuario.usuario.apelido}" required="true"/>
+					
+					<p:outputLabel value="#{msgs.pessoa}" for="cbPessoa"/>
+					<p:selectOneMenu id="cbPessoa" required="true" value="#{usuarioBean.usuario.pessoa}"
+					 converter="omnifaces.SelectItemsConverter" filter="true">
+						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue=""/>
+						<f:selectItems value="#{usuarioBean.pessoas}" var="pessoa" itemLabel="#{pessoa.nome}" itemValue="#{pessoa}"/>
+					</p:selectOneMenu>					
+					
+
 					<p:outputLabel value="#{msgs.apelido}" for="txtApelido"/>
 					<p:inputText id="txtApelido" size="60" maxlength="30" placeholder="#{msgs.apelido}"
-						value="#{MBUsuario.usuario.apelido}" required="true"/>
-					<p:outputLabel value="#{msgs.email}" for="txtEmail"/>
-					<p:inputText id="txtEmail" size="50" maxlength="120" placeholder="#{msgs.email}"
-						value="#{MBUsuario.usuario.email}" />
+						value="#{usuarioBean.usuario.apelido}" required="true"/>
 					<p:outputLabel value="#{msgs.login}" for="txtLogin"/>
 					<p:inputText id="txtLogin" size="25" maxlength="20" placeholder="#{msgs.login}"
-						value="#{MBUsuario.usuario.login}" required="true"/>
+						value="#{usuarioBean.usuario.login}" required="true"/>
 					<p:outputLabel value="#{msgs.senha}" for="txtSenha"/>
 					<p:password  id="txtSenha" size="25" maxlength="20" placeholder="#{msgs.senha}"
-						value="#{MBUsuario.usuario.senha}" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
-					<p:selectBooleanCheckbox value="#{MBUsuario.usuario.ativo}" itemLabel="#{msgs.ativo}" />
+						value="#{usuarioBean.usuario.senha}" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+					<p:selectBooleanCheckbox value="#{usuarioBean.usuario.ativo}" itemLabel="#{msgs.ativo}" />
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{MBUsuario.novoUsuario}"
+								actionListener="#{usuarioBean.novoUsuario}"
 								oncomplete="verificar(xhr, status, args, 'dlgNovoUsuario', 'tblUsuarios');"
 								update=":frmGridUsuarios:gridUsuarios :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"
@@ -165,16 +159,16 @@
 				<p><b><h:outputText value="#{msgs.msgExcluirUsuario}" /></b></p>
 				<h:panelGrid id="pnlUsuarioExcluir" columns="2">
 					<h:outputLabel value="#{msgs.codigo}" />
-					<h:outputText value="#{MBUsuario.usuario.id}" />
+					<h:outputText value="#{usuarioBean.usuario.id}" />
 					<h:outputLabel value="#{msgs.nome}" />
-					<h:outputText value="#{MBUsuario.usuario.nome}" />
+					<h:outputText value="#{usuarioBean.usuario.pessoa.nome}" />
 				</h:panelGrid>
 				<p>
 					<h:panelGrid columns="1">
 						<p:toolbar style="width:500px">
 							<f:facet name="right">
 								<p:commandButton value="#{msgs.sim}"
-									actionListener="#{MBUsuario.excluirUsuario}"
+									actionListener="#{usuarioBean.excluir}"
 									oncomplete="PF('dlgExcluirUsuario').hide();"
 									update=":frmGridUsuarios:gridUsuarios :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<p:commandButton value="#{msgs.cancelar}" process="@this"
@@ -192,23 +186,23 @@
 			draggable="false" height="180" width="550">
 			<h:form id="frmUsuarioConfirmar">
 				<p>
-					<b> <h:outputText rendered="#{!MBUsuario.flagAtivar}"
+					<b> <h:outputText rendered="#{!usuarioBean.flagAtivar}"
 							value="#{msgs.msgAtivarUsuario}" /> <h:outputText
-							rendered="#{MBUsuario.flagAtivar}"
+							rendered="#{usuarioBean.flagAtivar}"
 							value="#{msgs.msgDesativarUsuario}" /></b>
 				</p>
 				<h:panelGrid id="pnlUsuarioConfirmar" columns="2">
 					<h:outputLabel value="#{msgs.codigo}" />
-					<h:outputText value="#{MBUsuario.usuario.id}" />
+					<h:outputText value="#{usuarioBean.usuario.id}" />
 					<h:outputLabel value="#{msgs.nome}" />
-					<h:outputText value="#{MBUsuario.usuario.nome}" />
+					<h:outputText value="#{usuarioBean.usuario.pessoa.nome}" />
 				</h:panelGrid>
 				<p>
 					<h:panelGrid columns="1">
 						<p:toolbar style="width:500px">
 							<f:facet name="right">
 								<p:commandButton value="#{msgs.sim}"
-									actionListener="#{MBUsuario.ativarDesativar}"
+									actionListener="#{usuarioBean.ativarDesativar}"
 									oncomplete="PF('dlgAtiDesUsuario').hide();"
 									update=":frmGridUsuarios:gridUsuarios :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<p:commandButton value="#{msgs.cancelar}" process="@this"
@@ -227,32 +221,32 @@
 			<h:form id="frmUsuarioEditar">
 				<h:panelGrid id="pnlUsuarioEditar" columns="2">
 					<p:outputLabel value="ID: " />
-					<h:outputText value="#{MBUsuario.usuario.id}" />
+					<h:outputText value="#{usuarioBean.usuario.id}" />
 					<p:outputLabel value="#{msgs.tipo}" for="cbTiposEdt"/>
-					<p:selectOneMenu id="cbTiposEdt" required="true">
-						<f:selectItem itemLabel="#{MBUsuario.usuario.idTipo.tipo}" itemValue="#{MBUsuario.usuario.idTipo}"/>
-						<f:selectItems value="#{MBUsuario.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo}"/>
+					<p:selectOneMenu id="cbTiposEdt" required="true" converter="omnifaces.SelectItemsConverter">
+						<f:selectItem itemLabel="#{usuarioBean.usuario.tipo.tipo}" itemValue="#{usuarioBean.usuario.tipo}"/>
+						<f:selectItems value="#{usuarioBean.tipos}" var="tipo" itemLabel="#{tipo.tipo}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.nome}" for="edtNome"/>
 					<p:inputText id="edtNome" size="60" maxlength="50" placeholder="#{msgs.nome}"
-						value="#{MBUsuario.usuario.nome}" required="true"/>
+						value="#{usuarioBean.usuario.pessoa.nome}" required="true"/>
 					<p:outputLabel value="#{msgs.apelido}" for="edtApelido"/>
 					<p:inputText id="edtApelido" size="50" maxlength="30" placeholder="#{msgs.apelido}"
-						value="#{MBUsuario.usuario.apelido}" required="true"/>
+						value="#{usuarioBean.usuario.apelido}" required="true"/>
 					<p:outputLabel value="#{msgs.email}" />
 					<p:inputText size="50" maxlength="120" placeholder="#{msgs.email}"
-						value="#{MBUsuario.usuario.email}" />
+						value="#{usuarioBean.usuario.pessoa.emailPrincipal}" />
 					<p:outputLabel value="#{msgs.login}" for="edtLogin"/>
 					<p:inputText id="edtLogin" size="25" maxlength="20" placeholder="#{msgs.login}"
-						value="#{MBUsuario.usuario.login}" required="true"/>
+						value="#{usuarioBean.usuario.login}" required="true"/>
 					<p:outputLabel value="#{msgs.senha}" for="edtSenha"/>
 					<p:password  id="edtSenha" size="25" maxlength="20" redisplay="true" placeholder="#{msgs.senha}"
-						value="#{MBUsuario.usuario.senha}" required="true"/>
-					<p:selectBooleanCheckbox value="#{MBUsuario.usuario.ativo}" itemLabel="#{msgs.ativo}" />
+						value="#{usuarioBean.usuario.senha}" required="true"/>
+					<p:selectBooleanCheckbox value="#{usuarioBean.usuario.ativo}" itemLabel="#{msgs.ativo}" />
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{MBUsuario.editarUsuario}"
+								actionListener="#{usuarioBean.editar}"
 								oncomplete="verificar(xhr, status, args, 'dlgEditarUsuario', 'tblUsuarios');"
 								update=":frmGridUsuarios:gridUsuarios :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"

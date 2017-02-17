@@ -48,10 +48,10 @@ public class ImovelBean implements Serializable {
 
 		try {
 			ImovelDAO dao = new ImovelDAO();
-			imoveis = dao.listar();
+			imoveis = dao.listar("tsRegistro", true);
 
 			TipoImovelDAO daoTipo = new TipoImovelDAO();
-			tipos = daoTipo.listar();
+			tipos = daoTipo.listar("nome", false);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -65,7 +65,7 @@ public class ImovelBean implements Serializable {
 
 		try {
 			TipoImovelDAO daoTipo = new TipoImovelDAO();
-			tipos = daoTipo.listar();
+			tipos = daoTipo.listar("nome", false);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -90,8 +90,8 @@ public class ImovelBean implements Serializable {
 
 			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
 
-			tipos = tipoImovelDAO.listar();
-			imoveis = imovelDAO.listar();
+			tipos = tipoImovelDAO.listar("nome", false);
+			imoveis = imovelDAO.listar("tsRegistro", true);
 
 			Messages.addGlobalInfo("Imóvel gravado com sucesso!");
 		} catch (RuntimeException e) {
@@ -101,8 +101,10 @@ public class ImovelBean implements Serializable {
 
 	}
 
+	
 	public void editar() {
-
+		
+		// Usuário fake - fazer a classe que traz o usuario
 		Usuario usuario = new Usuario();
 
 		usuario.setId(1L);
@@ -120,8 +122,8 @@ public class ImovelBean implements Serializable {
 
 			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
 
-			tipos = tipoImovelDAO.listar();
-			imoveis = imovelDAO.listar();
+			tipos = tipoImovelDAO.listar("nome", false);
+			imoveis = imovelDAO.listar("tsRegistro", true);
 			
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " atualizado com sucesso!");
 		} catch (RuntimeException e) {
@@ -140,7 +142,7 @@ public class ImovelBean implements Serializable {
 		try {
 			ImovelDAO dao = new ImovelDAO();
 			// dao.ativarDesativar(imovel);
-			imoveis = dao.listar();
+			imoveis = dao.listar("tsRegistro", true);
 			flagAtivar = !imovel.getAtivo();
 			String msg = "";
 			if (flagAtivar) {
@@ -160,7 +162,7 @@ public class ImovelBean implements Serializable {
 		try {
 			ImovelDAO imovelDAO = new ImovelDAO();
 			imovelDAO.excluir(imovel);
-			imoveis = imovelDAO.listar();
+			imoveis = imovelDAO.listar("tsRegistro", true);
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " excluído com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();

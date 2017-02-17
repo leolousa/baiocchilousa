@@ -46,10 +46,10 @@ public class UsuarioBean {
 
 		try {
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
-			usuarios = usuarioDAO.listar();
+			usuarios = usuarioDAO.listar("tsRegistro", true);
 
 			TipoUsuarioDAO tipoUsuarioDAO = new TipoUsuarioDAO();
-			tipos = tipoUsuarioDAO.listar();
+			tipos = tipoUsuarioDAO.listar("nome", false);
 
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class UsuarioBean {
 		
 		try {
 			PessoaDAO pessoaDAO = new PessoaDAO();
-			pessoas = pessoaDAO.listar();
+			pessoas = pessoaDAO.listar("nome", false);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -80,7 +80,7 @@ public class UsuarioBean {
 		try {
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
 			usuarioDAO.salvar(usuario);
-			usuarioDAO.listar();
+			usuarioDAO.listar("tsRegistro", true);
 			Messages.addGlobalInfo("Usuário gravado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -99,7 +99,7 @@ public class UsuarioBean {
 		try {
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
 			usuarioDAO.ativar(usuario);
-			usuarios = usuarioDAO.listar();
+			usuarios = usuarioDAO.listar("tsRegistro", true);
 			flagAtivar = !usuario.getAtivo();
 			String msg = "";
 			if (flagAtivar) {
@@ -119,7 +119,7 @@ public class UsuarioBean {
 		try {
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
 			usuarioDAO.excluir(usuario);
-			usuarios = usuarioDAO.listar();
+			usuarios = usuarioDAO.listar("tsRegistro", true);
 			Messages.addGlobalInfo("Usuário " + usuario.getPessoa().getNome() + " excluído com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -131,7 +131,7 @@ public class UsuarioBean {
 		try {
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
 			usuarioDAO.editar(usuario);
-			usuarios = usuarioDAO.listar();
+			usuarios = usuarioDAO.listar("tsRegistro", true);
 			Messages.addGlobalInfo("Usuário " + usuario.getPessoa().getNome() + " atualizado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();

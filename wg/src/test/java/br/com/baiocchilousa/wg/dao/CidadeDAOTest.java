@@ -32,7 +32,7 @@ public class CidadeDAOTest {
 	public void listar() {
 
 		CidadeDAO cidadeDAO = new CidadeDAO();
-		List<Cidade> cidades = cidadeDAO.listar();
+		List<Cidade> cidades = cidadeDAO.listar("nome", false);
 
 		for (Cidade cidade : cidades) {
 			System.out.println(cidade.getId() + " - " + cidade.getNome() + " - " + cidade.getUf().getSigla());

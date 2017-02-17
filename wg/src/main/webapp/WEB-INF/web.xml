@@ -42,5 +42,10 @@
 		<param-name>primefaces.FONT_AWESOME</param-name>
 		<param-value>true</param-value>
 	</context-param>
+	
+	<!-- Carregamento do Hibernate -->
+	<listener>
+		<listener-class>br.com.baiocchilousa.wg.util.HibernateContexto</listener-class>
+	</listener>
 
 </web-app>

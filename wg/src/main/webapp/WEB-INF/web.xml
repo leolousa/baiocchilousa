@@ -7,7 +7,7 @@
 	<!-- Nome da aplicação -->
 	<display-name>WebGerente</display-name>
 
-	<!-- Página principal -->
+	<!-- Página inicial -->
 	<welcome-file-list>
 		<welcome-file>pages/inicio.xhtml</welcome-file>
 	</welcome-file-list>

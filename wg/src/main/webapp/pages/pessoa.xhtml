@@ -13,164 +13,181 @@
 
 	<ui:define name="conteudo">
 		<h3>
-			<h:outputText value="#{msgs.cadImoveis}" />
+			<h:outputText value="#{msgs.cadPessoas}" />
 		</h3>
-		<h:form id="frmGridImoveis">
+		<h:form id="frmGridPessoas">
 			<p:toolbar id="mnuOp">
 				<f:facet name="left">
-					<p:commandButton value="#{msgs.novoImovel}"
-						actionListener="#{MBImovel.prepararNovo()}"
-						oncomplete="PF('dlgNovoImovel').show()"
-						update=":frmImovelNovo:pnlImovelNovo" />
+					<p:commandButton value="#{msgs.novaPessoa}"
+						actionListener="#{pessoaBean.novo()}"
+						oncomplete="PF('dlgNovaPessoa').show()"
+						update=":frmPessoaNova:pnlPessoaNova" />
 				</f:facet>
 			</p:toolbar>
-			<p:dataTable id="gridImoveis" var="imovel" widgetVar="tblImoveis" styleClass="table"
-				filteredValue="#{MBImovel.imoveisFiltrados}"
-				value="#{MBImovel.imoveis}" rows="10" paginator="true"
-				emptyMessage="#{msgs.semDados}"
-				rowKey="#{imovel.id}" selection="#{MBImovel.imovel}"
-				selectionMode="single"
+			<p:dataTable id="gridPessoas" var="pessoa" widgetVar="tblPessoas"
+				styleClass="table" filteredValue="#{pessoaBean.pessoasFiltradas}"
+				value="#{pessoaBean.pessoas}" rows="10" paginator="true"
+				emptyMessage="#{msgs.semDados}" rowKey="#{pessoa.id}"
+				selection="#{pessoaBean.pessoa}" selectionMode="single"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="10,30,50,100">
 				<p:column headerText="ID" style="width:60px;text-align:center;">
-					<h:outputText value="#{imovel.id}" />
+					<h:outputText value="#{pessoa.id}" />
 				</p:column>
 
-				<p:column headerText="#{msgs.status}" sortBy="#{imovel.ativo}"
-					style="width:60px;text-align:center;">
-					<h:graphicImage rendered="#{imovel.ativo}" title="#{msgs.ativo}" library="img" name="ativo.png"/>
-					<h:graphicImage rendered="#{!imovel.ativo}" title="#{msgs.inativo}" library="img" name="inativo.png"/>
-				</p:column>
-
-				<p:column headerText="#{msgs.codigo}" filterBy="#{imovel.codigo}">
-					<h:outputText value="#{imovel.codigo}" />
-				</p:column>
-
-				<p:column headerText="#{msgs.nome}" sortBy="#{imovel.nome}"
-					style="width:400px;" filterBy="#{imovel.nome}"
+				<p:column headerText="#{msgs.nome}" sortBy="#{pessoa.nome}"
+					style="width:400px;" filterBy="#{pessoa.nome}"
 					filterMatchMode="contains">
-					<h:outputText value="#{imovel.nome}" />
+					<h:outputText value="#{pessoa.nome}" />
 				</p:column>
 
-				<p:column headerText="#{msgs.tipoImovel}"
-					sortBy="#{imovel.idTipoImovel.nome}" filterBy="#{imovel.idTipoImovel.id}"
-					filterMatchMode="exact">
-					<f:facet name="filter">
-						<p:selectOneMenu onchange="PF('tblImoveis').filter()">
-							<f:selectItem itemLabel="#{msgs.todos}" itemValue="#{null}"
-								noSelectionOption="true" />
-							<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo.id}"/>
-						</p:selectOneMenu>
-					</f:facet>
-					<h:outputText value="#{imovel.idTipoImovel.nome}" />
+				<p:column headerText="#{msgs.tipo}" sortBy="#{pessoa.tipoPessoa}">
+					<h:outputText value="#{pessoa.tipoPessoa}" />
 				</p:column>
 
-				<p:column headerText="#{msgs.cadastroEm}" sortBy="#{imovel.tsRegistro}"
+				<p:column headerText="#{msgs.cpfcnpj}" filterBy="#{pessoa.cpfCnpj}">
+					<h:outputText value="#{pessoa.cpfCnpj}" />
+				</p:column>
+
+				<p:column headerText="#{msgs.cadastroEm}"
+					sortBy="#{pessoa.tsRegistro}"
 					style="width:100px;text-align:center;">
-					<h:outputText value="#{imovel.tsRegistro}">
+					<h:outputText value="#{pessoa.tsRegistro}">
 						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{msgs.atualizadoEm}"
-					sortBy="#{imovel.tsAtualizacao}"
+					sortBy="#{pessoa.tsAtualizacao}"
 					style="width:100px;text-align:center;">
-					<h:outputText value="#{imovel.tsAtualizacao}">
+					<h:outputText value="#{pessoa.tsAtualizacao}">
 						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{msgs.comandos}">
-					<p:commandButton title="#{msgs.desativarImovel}"
-						rendered="#{imovel.ativo}" icon="ui-icon-closethick"
-						oncomplete="PF('dlgAtiDesImovel').show()"
-						update=":frmImovelConfirmar:pnlImovelConfirmar">
+					<p:commandButton title="#{msgs.editarPessoa}" icon="ui-icon-pencil"
+						oncomplete="PF('dlgEditarPessoa').show()"
+						update=":frmPessoaEditar:pnlPessoaEditar">
 						<f:setPropertyActionListener value="#{imovel}"
-							target="#{MBImovel.imovel}" />
+							target="#{pessoaBean.pessoa}" />
 					</p:commandButton>
-					<p:commandButton title="#{msgs.ativarImovel}"
-						rendered="#{!imovel.ativo}" icon="ui-icon-check"
-						oncomplete="PF('dlgAtiDesImovel').show()"
-						update=":frmImovelConfirmar:pnlImovelConfirmar">
-						<f:setPropertyActionListener value="#{imovel}"
-							target="#{MBImovel.imovel}" />
+					<p:commandButton title="#{msgs.excluirPessoa}" icon="ui-icon-trash"
+						oncomplete="PF('dlgExcluirPessoa').show()"
+						update=":frmPessoaExcluir:pnlPessoaExcluir">
+						<f:setPropertyActionListener value="#{pessoa}"
+							target="#{pessoaBean.pessoa}" />
 					</p:commandButton>
-					<p:commandButton title="#{msgs.editarImovel}" icon="ui-icon-pencil"
-						oncomplete="PF('dlgEditarImovel').show()"
-						update=":frmImovelEditar:pnlImovelEditar">
-						<f:setPropertyActionListener value="#{imovel}"
-							target="#{MBImovel.imovel}" />
-					</p:commandButton>
-					<p:commandButton title="#{msgs.excluirImovel}" icon="ui-icon-trash"
-						oncomplete="PF('dlgExcluirImovel').show()"
-						update=":frmImovelExcluir:pnlImovelExcluir">
-						<f:setPropertyActionListener value="#{imovel}"
-							target="#{MBImovel.imovel}" />
-					</p:commandButton>					
 				</p:column>
 			</p:dataTable>
 		</h:form>
 
 
-		<p:dialog header="#{msgs.cadastrarNovoImovel}" widgetVar="dlgNovoImovel"
-			responsive="true" modal="true" appendTo="@(body)" resizable="false"
-			closable="true" draggable="false" height="520" width="1000">
-			<h:form id="frmImovelNovo">
-				<h:panelGrid id="pnlImovelNovo" columns="2">
-					<p:outputLabel value="Tipo:" for="cdTiposNovo"/>
-					<p:selectOneMenu id="cdTiposNovo" value="#{MBImovel.imovel.idTipoImovel}" required="true"
-						requiredMessage="#{msgs.msgCampoObrigatorio}" converter="generic">
+		<p:dialog header="#{msgs.cadastrarNovaPessoa}"
+			widgetVar="dlgNovaPessoa" responsive="true" modal="true"
+			appendTo="@(body)" resizable="false" closable="true"
+			draggable="false" height="520" width="1000">
+			<h:form id="frmPessoaNova">
+				<h:panelGrid id="pnlPessoaNova" columns="2">
+					<p:outputLabel value="Tipo:" for="cdTiposPessoa" />
+					<p:selectOneMenu id="cdTiposPessoa"
+						value="#{pessoaBean.pessoa.tipoPessoa}" required="true"
+						requiredMessage="#{msgs.msgTipoObrigatorio}">
 						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
-						<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
+						<f:selectItem itemLabel="#{msgs.fisica}" itemValue="F" />
+						<f:selectItem itemLabel="#{msgs.juridica}" itemValue="J" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{msgs.codigo}:" />
-					<p:inputText size="30" maxlength="20" placeholder="#{msgs.codigo}"
-						value="#{MBImovel.imovel.codigo}" />
-					<p:outputLabel value="#{msgs.nome}:" for="txtNome"/>
-					<p:inputText id="txtNome" size="60" maxlength="50" placeholder="#{msgs.nome}"
-						value="#{MBImovel.imovel.nome}" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
-					<p:outputLabel value="#{msgs.descricao}:" for="txtDesc" />
-					<p:editor id="txtDesc" value="#{MBImovel.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgDescricaoObrigatorio}"/>
-					<p:outputLabel />
+					<p:outputLabel value="#{msgs.nome}:" for="txtNome" />
+					<p:inputText id="txtNome" size="60" maxlength="50"
+						placeholder="#{msgs.nome}" value="#{pessoaBean.pessoa.nome}"
+						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
+					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpj" />
+					<p:inputText id="txtCpfCnpj" size="20" maxlength="20"
+						placeholder="#{msgs.cpfcnpj}" value="#{pessoaBean.pessoa.cpfCnpj}"
+						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
+					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIe" />
+					<p:inputText id="txtRgIe" size="20" maxlength="20"
+						placeholder="#{msgs.rgie}" value="#{pessoaBean.pessoa.rgIe}" />
+					<p:outputLabel value="#{msgs.endereco}:" />
+					<p:inputText size="50" maxlength="40"
+						value="#{pessoaBean.pessoa.endereco}" required="true"
+						requiredMessage="#{msgs.msgEnderecoObrigatorio}" />
+					<p:outputLabel value="#{msgs.complemento}:" />
+					<p:inputText size="50" maxlength="40"
+						value="#{pessoaBean.pessoa.complemento}" />
+					<p:outputLabel value="#{msgs.bairro}:" />
+					<p:inputText size="40" maxlength="30"
+						value="#{pessoaBean.pessoa.bairro}" />
+					<p:outputLabel value="#{msgs.cidade}" for="cbCidades" />
+					<p:selectOneMenu id="cbCidades" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="#{msgs.msgCidadeObrigatorio}" >
+						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
+						<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+					</p:selectOneMenu>					
+					<p:outputLabel value="#{msgs.cep}" />
+					<p:inputText maxlength="5" size="10"
+						value="#{pessoaBean.pessoa.cep}"
+						converterMessage="Informe um valor válido para o campo 'CEP'"
+						validatorMessage="Informe um valor entre 0 e 99999999 para o campo CEP">
+						<f:validateLongRange minimum="0" maximum="99999999" />
+					</p:inputText>
+					<p:outputLabel value="#{msgs.emailPrincipal}:" />
+					<p:inputText size="60" maxlength="100"
+						value="#{pessoaBean.pessoa.emailPrincipal}" />					
+					<p:outputLabel value="#{msgs.emailAlternativo}:" />
+					<p:inputText size="60" maxlength="110"
+						value="#{pessoaBean.pessoa.emailAlternativo}" />					
+					<p:outputLabel value="#{msgs.foneFixo}:" />
+					<p:inputText size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneFixo}" />					
+					<p:outputLabel value="#{msgs.foneCel1}:" />
+					<p:inputText size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneCel1}" />					
+					<p:outputLabel value="#{msgs.foneCel2}:" />
+					<p:inputText size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneCel2}" />					
+					
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{MBImovel.novoImovel}"
-								oncomplete="verificar(xhr, status, args, 'dlgNovoImovel', 'tblImoveis');"
-								update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+								actionListener="#{pessoaBean.novo}"
+								oncomplete="verificar(xhr, status, args, 'dlgNovaPessoa', 'tblPessoas');"
+								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"
-								onclick="PF('dlgNovoImovel').hide()">
-								<p:resetInput target="pnlImovelNovo"/>
+								onclick="PF('dlgNovaPessoa').hide()">
+								<p:resetInput target="pnlPessoaNova" />
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
 				</h:panelGrid>
-				<p:outputLabel value="* #{msgs.obrigatorio}"/>
+				<p:outputLabel value="* #{msgs.obrigatorio}" />
 			</h:form>
 
 		</p:dialog>
 
-		<p:dialog header="#{msgs.excluirImovel}" widgetVar="dlgExcluirImovel"
+		<p:dialog header="#{msgs.excluirPessoa}" widgetVar="dlgExcluirPessoa"
 			modal="true" appendTo="@(body)" resizable="false" closable="true"
 			draggable="false" height="180" width="550">
-			<h:form id="frmImovelExcluir">
-				<p><b><h:outputText value="#{msgs.msgExcluirImovel}" /></b></p>
-				<h:panelGrid id="pnlImovelExcluir" columns="2">
+			<h:form id="frmPessoaExcluir">
+				<p>
+					<b><h:outputText value="#{msgs.msgExcluirImovel}" /></b>
+				</p>
+				<h:panelGrid id="pnlPessoaExcluir" columns="2">
 					<h:outputLabel value="#{msgs.codigo}" />
-					<h:outputText value="#{MBImovel.imovel.codigo}" />
+					<h:outputText value="#{pessoaBean.pessoa.id}" />
 					<h:outputLabel value="#{msgs.nome}" />
-					<h:outputText value="#{MBImovel.imovel.nome}" />
+					<h:outputText value="#{pessoaBean.pessoa.nome}" />
 				</h:panelGrid>
 				<p>
 					<h:panelGrid columns="1">
 						<p:toolbar style="width:500px">
 							<f:facet name="right">
 								<p:commandButton value="#{msgs.sim}"
-									actionListener="#{MBImovel.excluirImovel}"
-									oncomplete="PF('dlgExcluirImovel').hide();"
-									update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+									actionListener="#{pessoaBean.excluir}"
+									oncomplete="PF('dlgExcluirPessoa').hide();"
+									update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<p:commandButton value="#{msgs.cancelar}" process="@this"
-									onclick="PF('dlgExcluirImovel').hide()" />
+									onclick="PF('dlgExcluirPessoa').hide()" />
 							</f:facet>
 						</p:toolbar>
 					</h:panelGrid>
@@ -179,72 +196,25 @@
 
 		</p:dialog>
 
-
-		<p:dialog header="#{msgs.ativarDesativarImovel}" widgetVar="dlgAtiDesImovel"
-			modal="true" appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="180" width="550">
-			<h:form id="frmImovelConfirmar">
-				<p>
-					<b> <h:outputText rendered="#{!MBImovel.flagAtivar}"
-							value="#{msgs.msgAtivarImovel}" /> <h:outputText
-							rendered="#{MBImovel.flagAtivar}"
-							value="#{msgs.msgDesativarImovel}" /></b>
-				</p>
-				<h:panelGrid id="pnlImovelConfirmar" columns="2">
-					<h:outputLabel value="#{msgs.codigo}" />
-					<h:outputText value="#{MBImovel.imovel.codigo}" />
-					<h:outputLabel value="#{msgs.nome}" />
-					<h:outputText value="#{MBImovel.imovel.nome}" />
-				</h:panelGrid>
-				<p>
-					<h:panelGrid columns="1">
-						<p:toolbar style="width:500px">
-							<f:facet name="right">
-								<p:commandButton value="#{msgs.sim}"
-									actionListener="#{MBImovel.ativarDesativar}"
-									oncomplete="PF('dlgAtiDesImovel').hide();"
-									update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-								<p:commandButton value="#{msgs.cancelar}" process="@this"
-									onclick="PF('dlgAtiDesImovel').hide()"/>
-							</f:facet>
-						</p:toolbar>
-					</h:panelGrid>
-				</p>
-			</h:form>
-
-		</p:dialog>
-
-		<p:dialog header="#{msgs.editarImovel}" widgetVar="dlgEditarImovel"
+		<p:dialog header="#{msgs.editarPessoa}" widgetVar="dlgEditarPessoa"
 			modal="true" appendTo="@(body)" resizable="false" closable="true"
 			draggable="false" height="520" width="1000">
-			<h:form id="frmImovelEditar">
-				<h:panelGrid id="pnlImovelEditar" columns="2">
-					<p:outputLabel value="ID"/>
-					<h:outputText value="#{MBImovel.imovel.id}" />
-					<p:outputLabel value="#{msgs.tipo}" for="cdTiposEdt" />
-					<p:selectOneMenu id="cdTiposEdt" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}">
-						<f:selectItem itemLabel="#{MBImovel.imovel.idTipoImovel.nome}" itemValue="#{MBImovel.imovel.idTipoImovel}"/>
-						<f:selectItems value="#{MBImovel.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
-					</p:selectOneMenu>
+			<h:form id="frmPessoaEditar">
+				<h:panelGrid id="pnlPessoaEditar" columns="2">
+					<p:outputLabel value="ID" />
+					<h:outputText value="#{pessoaBean.pessoa.id}" />
 					<p:outputLabel value="#{msgs.codigo}" />
-					<p:inputText size="30" maxlength="20" placeholder="#{msgs.codigo}"
-						value="#{MBImovel.imovel.codigo}" />
-					<p:outputLabel value="#{msgs.nome}" for="edtNome" />
-					<p:inputText id="edtNome" size="60" maxlength="50" placeholder="#{msgs.nome}" required="true"
-						 requiredMessage="#{msgs.msgCampoObrigatorio}" value="#{MBImovel.imovel.nome}" />
-					<p:outputLabel value="#{msgs.descricao} " for="edtDesc" />
-					<p:editor id="edtDesc" value="#{MBImovel.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
-					<p:selectBooleanCheckbox value="#{MBImovel.imovel.ativo}" itemLabel="#{msgs.ativo}" 
-						required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+
+
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{MBImovel.editarImovel}"
-								oncomplete="verificar(xhr, status, args, 'dlgEditarImovel', 'tblImoveis');"
-								update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+								actionListener="#{pessoaBean.editar}"
+								oncomplete="verificar(xhr, status, args, 'dlgEditarPessoa', 'tblPessoas');"
+								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"
-								onclick="PF('dlgEditarImovel').hide()">
-								<p:resetInput target="pnlImovelEditar"/>
+								onclick="PF('dlgEditarPessoa').hide()">
+								<p:resetInput target="pnlPessoaEditar" />
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>

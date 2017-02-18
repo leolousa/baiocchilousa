@@ -30,13 +30,11 @@ public class Pessoa extends GenericDomain {
 	@Column(length = 40, nullable = false)
 	private String endereco;
 
-	private Short numero;
+	@Column(length = 40)
+	private String complemento;
 
 	@Column(length = 30)
 	private String bairro;
-
-	@Column(length = 40)
-	private String complemento;
 
 	@Column(nullable = false)
 	private int cep;
@@ -119,14 +117,6 @@ public class Pessoa extends GenericDomain {
 
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
-	}
-
-	public Short getNumero() {
-		return numero;
-	}
-
-	public void setNumero(Short numero) {
-		this.numero = numero;
 	}
 
 	public String getBairro() {

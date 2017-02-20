@@ -77,7 +77,7 @@ public class CidadeDAOTest {
 	
 	
 	@Test
-	
+	@Ignore
 	public void editar(){
 
 		Long codCidade = 5565L;
@@ -103,7 +103,22 @@ public class CidadeDAOTest {
 		cidade.setUf(uf);
 		
 		cidadeDAO.editar(cidade);
-		
-		
 	}
+	
+	
+	@Test
+
+	public void buscaPorUF() {
+		Long idUf = 1L;
+		
+		CidadeDAO cidadeDAO = new CidadeDAO();
+		List<Cidade> cidades = cidadeDAO.buscaPorUf(idUf, "nome", false);
+
+		for (Cidade cidade : cidades) {
+			System.out.println(cidade.getId() + " - " + cidade.getNome() + " - " + cidade.getUf().getSigla());
+		}
+
+	}
+	
+	
 }

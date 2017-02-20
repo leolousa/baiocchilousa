@@ -1,6 +1,7 @@
 package br.com.baiocchilousa.wg.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,10 @@ import org.omnifaces.util.Messages;
 
 import br.com.baiocchilousa.wg.dao.CidadeDAO;
 import br.com.baiocchilousa.wg.dao.PessoaDAO;
+import br.com.baiocchilousa.wg.dao.UfDAO;
 import br.com.baiocchilousa.wg.domain.Cidade;
 import br.com.baiocchilousa.wg.domain.Pessoa;
+import br.com.baiocchilousa.wg.domain.Uf;
 import br.com.baiocchilousa.wg.domain.Usuario;
 
 
@@ -41,6 +44,8 @@ public class PessoaBean implements Serializable{
 	private List<Pessoa> pessoas;
 	private List<Pessoa> pessoasFiltradas;
 	private List<Cidade> cidades;
+	private Uf uf;
+	private List<Uf> estados;
 	private Pessoa pessoa;
 	
 	
@@ -59,12 +64,14 @@ public class PessoaBean implements Serializable{
 	}
 
 	public void novo() {
-
 		pessoa = new Pessoa();
 
 		try {
-			CidadeDAO cidadeDAO = new CidadeDAO();
-			setCidades(cidadeDAO.listar("nome", false));
+
+			UfDAO ufDAO = new UfDAO();
+			estados = ufDAO.listar("nome", false); 
+			cidades = new ArrayList<Cidade>();
+			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -141,6 +148,24 @@ public class PessoaBean implements Serializable{
 		}
 	}
 	
+	
+	public void populaCombo(){
+		try {
+			if(uf != null){
+				CidadeDAO cidadeDAO = new CidadeDAO();
+				cidades = cidadeDAO.buscaPorUf(uf.getId(), "nome", false);
+			}else{
+				cidades = new ArrayList<Cidade>();
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+		}
+		
+	}
+	
+	
+	
 	public List<Pessoa> getPessoas() {
 		return pessoas;
 	}
@@ -166,6 +191,22 @@ public class PessoaBean implements Serializable{
 
 	public void setCidades(List<Cidade> cidades) {
 		this.cidades = cidades;
+	}
+
+	public List<Uf> getEstados() {
+		return estados;
+	}
+
+	public void setEstados(List<Uf> estados) {
+		this.estados = estados;
+	}
+
+	public Uf getUf() {
+		return uf;
+	}
+
+	public void setUf(Uf uf) {
+		this.uf = uf;
 	}
 	
 	

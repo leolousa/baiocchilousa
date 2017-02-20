@@ -40,14 +40,29 @@ public class GenericDAO<Entidade> {
 	}
 	
 	@SuppressWarnings({ "unchecked" })
-	public List<Entidade> listar(String ordem, boolean desc){
+	public List<Entidade> listar(){
 		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
 			Criteria consulta = sessao.createCriteria(classe);
-			if(desc){
-				consulta.addOrder(Order.desc(ordem));	
+			List<Entidade> lista = consulta.list();
+			return lista;
+		} catch (RuntimeException erro) {
+			throw erro;
+		} finally {
+			sessao.close();
+		}
+
+	}
+	
+	@SuppressWarnings({ "unchecked" })
+	public List<Entidade> listar(String campoOrdenacao, boolean descendente){
+		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+		try {
+			Criteria consulta = sessao.createCriteria(classe);
+			if(descendente){
+				consulta.addOrder(Order.desc(campoOrdenacao));	
 			}else{
-				consulta.addOrder(Order.asc(ordem));
+				consulta.addOrder(Order.asc(campoOrdenacao));
 			}
 			List<Entidade> lista = consulta.list();
 			return lista;

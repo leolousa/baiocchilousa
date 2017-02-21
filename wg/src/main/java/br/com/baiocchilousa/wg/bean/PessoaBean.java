@@ -50,12 +50,18 @@ public class PessoaBean implements Serializable{
 	
 	
 	@PostConstruct
-	public void preparaPessoas() {
+	public void inicio() {
 
 		try {
 			PessoaDAO dao = new PessoaDAO();
 			pessoas = dao.listar("tsRegistro", true);
+			
+			UfDAO ufDAO = new UfDAO();
+			estados = ufDAO.listar("nome", false);
 
+			CidadeDAO cidadeDAO = new CidadeDAO();
+			cidades = cidadeDAO.listar("nome", false);
+			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -64,10 +70,10 @@ public class PessoaBean implements Serializable{
 	}
 
 	public void novo() {
-		pessoa = new Pessoa();
-
 		try {
-
+			pessoa = new Pessoa();
+			uf = new Uf();
+			
 			UfDAO ufDAO = new UfDAO();
 			estados = ufDAO.listar("nome", false); 
 			cidades = new ArrayList<Cidade>();
@@ -80,7 +86,7 @@ public class PessoaBean implements Serializable{
 	}
 
 	public void salvar() {
-
+		// TODO: implemantar o usuário
 		Usuario usuario = new Usuario();
 
 		usuario.setId(1L);
@@ -92,13 +98,14 @@ public class PessoaBean implements Serializable{
 			pessoaDAO.merge(pessoa);
 
 			pessoa = new Pessoa();
+			uf = new Uf();
 
 			CidadeDAO cidadeDAO = new CidadeDAO();
 
 			cidades = cidadeDAO.listar("nome", false);
 			pessoas = pessoaDAO.listar("tsRegistro", true);
 
-			Messages.addGlobalInfo("Pessoa gravado com sucesso!");
+			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " gravada com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());
@@ -141,7 +148,7 @@ public class PessoaBean implements Serializable{
 			PessoaDAO pessoaDAO = new PessoaDAO();
 			pessoaDAO.excluir(pessoa);
 			pessoas = pessoaDAO.listar("tsRegistro", true);
-			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " excluído com sucesso!");
+			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " excluída com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addFlashGlobalError("Erro: " + e.getMessage());

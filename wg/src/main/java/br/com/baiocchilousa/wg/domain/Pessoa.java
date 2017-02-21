@@ -20,11 +20,13 @@ public class Pessoa extends GenericDomain {
 	@Column(nullable = false)
 	private Character tipoPessoa; // F-Física - J-Jurídica
 
-	private Long cpfCnpj;
-	
-	@Column(nullable = true)
-	private int rgIe;
+	@Column(length = 20)
+	private String cpfCnpj;
 
+	@Column(length = 20)
+	private String rgIe;
+
+	@Temporal(value = TemporalType.DATE)
 	private Date dataNascimento;
 
 	@Column(length = 40, nullable = false)
@@ -36,8 +38,8 @@ public class Pessoa extends GenericDomain {
 	@Column(length = 30)
 	private String bairro;
 
-	@Column(nullable = false)
-	private int cep;
+	@Column(length = 11, nullable = false)
+	private String cep;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false)
@@ -71,6 +73,7 @@ public class Pessoa extends GenericDomain {
 	private Long usuarioAtualizacao;
 
 	
+	
 	public String getNome() {
 		return nome;
 	}
@@ -87,19 +90,19 @@ public class Pessoa extends GenericDomain {
 		this.tipoPessoa = tipoPessoa;
 	}
 
-	public Long getCpfCnpj() {
+	public String getCpfCnpj() {
 		return cpfCnpj;
 	}
 
-	public void setCpfCnpj(Long cpfCnpj) {
+	public void setCpfCnpj(String cpfCnpj) {
 		this.cpfCnpj = cpfCnpj;
 	}
 
-	public int getRgIe() {
+	public String getRgIe() {
 		return rgIe;
 	}
 
-	public void setRgIe(int rgIe) {
+	public void setRgIe(String rgIe) {
 		this.rgIe = rgIe;
 	}
 
@@ -119,14 +122,6 @@ public class Pessoa extends GenericDomain {
 		this.endereco = endereco;
 	}
 
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
 	public String getComplemento() {
 		return complemento;
 	}
@@ -135,11 +130,19 @@ public class Pessoa extends GenericDomain {
 		this.complemento = complemento;
 	}
 
-	public int getCep() {
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCep() {
 		return cep;
 	}
 
-	public void setCep(int cep) {
+	public void setCep(String cep) {
 		this.cep = cep;
 	}
 
@@ -222,10 +225,5 @@ public class Pessoa extends GenericDomain {
 	public void setUsuarioAtualizacao(Long usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
-
-
-	
-	
-	
 
 }

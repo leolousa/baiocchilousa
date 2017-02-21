@@ -44,7 +44,7 @@ public class ImovelBean implements Serializable {
 	private boolean flagAtivar;
 
 	@PostConstruct
-	public void preparaImoveis() {
+	public void inicio() {
 
 		try {
 			ImovelDAO dao = new ImovelDAO();

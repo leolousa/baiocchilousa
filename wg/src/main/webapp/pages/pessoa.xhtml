@@ -49,8 +49,14 @@
 					<h:outputText value="#{pessoa.cpfCnpj}" />
 				</p:column>
 				
-				<p:column headerText="#{msgs.cidade}" filterBy="#{pessoa.cidade.nome}">
-					<h:outputText value="#{pessoa.cidade.nome}" />
+				<p:column headerText="#{msgs.cidade}" sortBy="pessoa.cidade.nome" filterBy="#{pessoa.cidade.nome}" filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('tblPessoas').filter()" converter="omnifaces.SelectItemsConverter" filter="true">
+							<f:selectItem itemLabel="#{msgs.todos}"	noSelectionOption="true" />
+							<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade.nome}"/>
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{pessoa.cidade.nome} - #{pessoa.cidade.uf.sigla}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.cadastroEm}"
@@ -73,7 +79,7 @@
 					<p:commandButton title="#{msgs.editarPessoa}" icon="ui-icon-pencil"
 						oncomplete="PF('dlgEditarPessoa').show()"
 						update=":frmPessoaEditar:pnlPessoaEditar">
-						<f:setPropertyActionListener value="#{imovel}"
+						<f:setPropertyActionListener value="#{pessoa}"
 							target="#{pessoaBean.pessoa}" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.excluirPessoa}" icon="ui-icon-trash"
@@ -90,7 +96,7 @@
 		<p:dialog header="#{msgs.cadastrarNovaPessoa}"
 			widgetVar="dlgNovaPessoa" responsive="true" modal="true"
 			appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="520" width="1000">
+			draggable="false" height="520" width="600">
 			<h:form id="frmPessoaNova">
 				<h:panelGrid id="pnlPessoaNova" columns="2">
 					<p:outputLabel value="Tipo:" for="cdTiposPessoa" />
@@ -106,18 +112,22 @@
 						placeholder="#{msgs.nome}" value="#{pessoaBean.pessoa.nome}"
 						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
 					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpj" />
-					<p:inputMask mask="99999999999999999999" autoClear="false" id="txtCpfCnpj" size="30"
+					<p:inputMask id="txtCpfCnpj" size="30"
 						placeholder="#{msgs.cpfcnpj}" value="#{pessoaBean.pessoa.cpfCnpj}"
 						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
+					<p:outputLabel value="#{msgs.dataDeNascimento}:" for="txtDataNasc" />
+					<p:calendar id="txtDataNasc"
+							value="#{pessoaBean.pessoa.dataNascimento}" locale="pt"
+							pattern="dd/MM/yyyy" mask="true" readonlyInput="false" showOn="button" navigator="true" />
 					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIe" />
 					<p:inputText id="txtRgIe" size="20" maxlength="20"
 						placeholder="#{msgs.rgie}" value="#{pessoaBean.pessoa.rgIe}" />
 					<p:outputLabel value="#{msgs.endereco}:" for="txtEndereco"/>
-					<p:inputText id="txtEndereco" size="50" maxlength="40"
+					<p:inputText id="txtEndereco" size="60" maxlength="40"
 						value="#{pessoaBean.pessoa.endereco}" required="true"
 						requiredMessage="#{msgs.msgEnderecoObrigatorio}" />
 					<p:outputLabel value="#{msgs.complemento}:" />
-					<p:inputText size="50" maxlength="40"
+					<p:inputText size="60" maxlength="40"
 						value="#{pessoaBean.pessoa.complemento}" />
 					<p:outputLabel value="#{msgs.bairro}:" />
 					<p:inputText size="40" maxlength="30"
@@ -135,17 +145,12 @@
 						<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.cep}" />
-					<p:inputMask mask="99.999-999" size="10"
-						value="#{pessoaBean.pessoa.cep}"
-						converterMessage="Informe um valor válido para o campo 'CEP'"
-						validatorMessage="Informe um valor entre 0 e 99999999 para o campo CEP">
-						<f:validateLongRange minimum="0" maximum="99999999" />
-					</p:inputMask>
+					<p:inputMask mask="99.999-999" value="#{pessoaBean.pessoa.cep}" />
 					<p:outputLabel value="#{msgs.emailPrincipal}:" />
-					<p:inputText size="60" maxlength="100"
+					<p:inputText size="60" maxlength="50"
 						value="#{pessoaBean.pessoa.emailPrincipal}" />					
 					<p:outputLabel value="#{msgs.emailAlternativo}:" />
-					<p:inputText size="60" maxlength="110"
+					<p:inputText size="60" maxlength="50"
 						value="#{pessoaBean.pessoa.emailAlternativo}" />					
 					<p:outputLabel value="#{msgs.foneFixo}:" />
 					<p:inputMask mask="(99)9999-9999" size="14" maxlength="20"
@@ -160,7 +165,7 @@
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}"
-								actionListener="#{pessoaBean.novo}"
+								actionListener="#{pessoaBean.salvar}"
 								oncomplete="verificar(xhr, status, args, 'dlgNovaPessoa', 'tblPessoas');"
 								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this"
@@ -180,7 +185,7 @@
 			draggable="false" height="180" width="550">
 			<h:form id="frmPessoaExcluir">
 				<p>
-					<b><h:outputText value="#{msgs.msgExcluirImovel}" /></b>
+					<b><h:outputText value="#{msgs.msgExcluirPessoa}" /></b>
 				</p>
 				<h:panelGrid id="pnlPessoaExcluir" columns="2">
 					<h:outputLabel value="#{msgs.codigo}" />
@@ -194,7 +199,7 @@
 							<f:facet name="right">
 								<p:commandButton value="#{msgs.sim}"
 									actionListener="#{pessoaBean.excluir}"
-									oncomplete="PF('dlgExcluirPessoa').hide();"
+									oncomplete="verificar(xhr, status, args, 'dlgExcluirPessoa', 'tblPessoas');"
 									update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<p:commandButton value="#{msgs.cancelar}" process="@this"
 									onclick="PF('dlgExcluirPessoa').hide()" />
@@ -208,13 +213,74 @@
 
 		<p:dialog header="#{msgs.editarPessoa}" widgetVar="dlgEditarPessoa"
 			modal="true" appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="520" width="1000">
+			draggable="false" height="520" width="600">
 			<h:form id="frmPessoaEditar">
 				<h:panelGrid id="pnlPessoaEditar" columns="2">
 					<p:outputLabel value="ID" />
 					<h:outputText value="#{pessoaBean.pessoa.id}" />
-					<p:outputLabel value="#{msgs.codigo}" />
-
+					<p:outputLabel value="Tipo:" for="cdTiposPessoaEdt" />
+					<p:selectOneMenu id="cdTiposPessoaEdt"
+						value="#{pessoaBean.pessoa.tipoPessoa}" required="true"
+						requiredMessage="#{msgs.msgTipoObrigatorio}">
+						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
+						<f:selectItem itemLabel="#{msgs.fisica}" itemValue="F" />
+						<f:selectItem itemLabel="#{msgs.juridica}" itemValue="J" />
+					</p:selectOneMenu>
+					<p:outputLabel value="#{msgs.nome}:" for="txtNomeEdt" />
+					<p:inputText id="txtNomeEdt" size="60" maxlength="50" 
+						placeholder="#{msgs.nome}" value="#{pessoaBean.pessoa.nome}"
+						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
+					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpjEdt" />
+					<p:inputMask id="txtCpfCnpjEdt" size="30"
+						placeholder="#{msgs.cpfcnpj}" value="#{pessoaBean.pessoa.cpfCnpj}"
+						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
+					<p:outputLabel value="#{msgs.dataDeNascimento}:" for="txtDataNascEdt" />
+					<p:calendar id="txtDataNascEdt"
+							value="#{pessoaBean.pessoa.dataNascimento}" locale="pt"
+							pattern="dd/MM/yyyy" mask="true" readonlyInput="false" showOn="button" navigator="true" />
+					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIeEdt" />
+					<p:inputText id="txtRgIeEdt" size="20" maxlength="20"
+						placeholder="#{msgs.rgie}" value="#{pessoaBean.pessoa.rgIe}" />
+					<p:outputLabel value="#{msgs.endereco}:" for="txtEnderecoEdt"/>
+					<p:inputText id="txtEnderecoEdt" size="60" maxlength="40"
+						value="#{pessoaBean.pessoa.endereco}" required="true"
+						requiredMessage="#{msgs.msgEnderecoObrigatorio}" />
+					<p:outputLabel value="#{msgs.complemento}:" />
+					<p:inputText size="60" maxlength="40"
+						value="#{pessoaBean.pessoa.complemento}" />
+					<p:outputLabel value="#{msgs.bairro}:" />
+					<p:inputText size="40" maxlength="30"
+						value="#{pessoaBean.pessoa.bairro}" />
+					<p:outputLabel value="#{msgs.uf}" for="cbUfEdt" />
+					<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
+						<f:selectItem itemLabel="#{pessoaBean.pessoa.cidade.uf.nome}" itemValue="#{pessoaBean.pessoa.cidade.uf.id}"/>
+						<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
+						<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaEditar:cbCidadesEdt"/>
+					</p:selectOneMenu>					
+					<p:outputLabel value="#{msgs.cidade}" for="cbCidadesEdt" />
+					<p:selectOneMenu id="cbCidadesEdt" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
+						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
+						<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+					</p:selectOneMenu>
+					<p:outputLabel value="#{msgs.cep}" />
+					<p:inputMask mask="99.999-999" value="#{pessoaBean.pessoa.cep}" />
+					<p:outputLabel value="#{msgs.emailPrincipal}:" />
+					<p:inputText size="60" maxlength="50"
+						value="#{pessoaBean.pessoa.emailPrincipal}" />					
+					<p:outputLabel value="#{msgs.emailAlternativo}:" />
+					<p:inputText size="60" maxlength="50"
+						value="#{pessoaBean.pessoa.emailAlternativo}" />					
+					<p:outputLabel value="#{msgs.foneFixo}:" />
+					<p:inputMask mask="(99)9999-9999" size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneFixo}" />					
+					<p:outputLabel value="#{msgs.foneCel1}:" />
+					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneCel1}" />					
+					<p:outputLabel value="#{msgs.foneCel2}:" />
+					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
+						value="#{pessoaBean.pessoa.foneCel2}" />					
+					<p:outputLabel />
 
 					<p:toolbar>
 						<f:facet name="right">

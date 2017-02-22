@@ -117,7 +117,7 @@
 
 		<p:dialog header="#{msgs.cadastrarNovoImovel}" widgetVar="dlgNovoImovel"
 			responsive="true" modal="true" appendTo="@(body)" resizable="false"
-			closable="true" draggable="false" height="520" width="1000">
+			closable="true" draggable="false" height="460" width="1000">
 			<h:form id="frmImovelNovo">
 				<h:panelGrid id="pnlImovelNovo" columns="2">
 					<p:outputLabel value="Tipo:" for="cdTiposNovo"/>
@@ -127,27 +127,30 @@
 						<f:selectItems value="#{imovelBean.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.codigo}:" />
-					<p:inputText size="30" maxlength="20" placeholder="#{msgs.codigo}"
-						value="#{imovelBean.imovel.codigo}" />
-					<p:outputLabel value="#{msgs.nome}:" for="txtNome"/>
-					<p:inputText id="txtNome" size="60" maxlength="50" placeholder="#{msgs.nome}"
-						value="#{imovelBean.imovel.nome}" required="true" requiredMessage="#{msgs.msgNomeObrigatorio}"/>
+					<h:panelGrid  columns="4">
+						<p:outputLabel/>
+						<p:inputText size="20" maxlength="20" value="#{imovelBean.imovel.codigo}" />
+						<p:outputLabel value="#{msgs.nome}:" for="txtNome"/>
+						<p:inputText id="txtNome" size="80" maxlength="50" value="#{imovelBean.imovel.nome}"
+						 required="true" requiredMessage="#{msgs.msgNomeObrigatorio}"/>
+					</h:panelGrid>
 					<p:outputLabel value="#{msgs.descricao}:" for="txtDesc" />
 					<p:editor id="txtDesc" value="#{imovelBean.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgDescricaoObrigatorio}"/>
-					<p:outputLabel />
+				</h:panelGrid>
+				<h:panelGrid width="100%" columns="1">
 					<p:toolbar>
 						<f:facet name="right">
-							<p:commandButton value="#{msgs.gravar}"
+							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
 								actionListener="#{imovelBean.salvar}"
 								oncomplete="verificar(xhr, status, args, 'dlgNovoImovel', 'tblImoveis');"
 								update=":frmGridImoveis:gridImoveis :frmImovelNovo:pnlImovelNovo :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<p:commandButton value="#{msgs.cancelar}" process="@this"
+							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
 								onclick="PF('dlgNovoImovel').hide()">
 								<p:resetInput target="pnlImovelNovo"/>
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
-				</h:panelGrid>
+				</h:panelGrid>				
 				<p:outputLabel value="* #{msgs.obrigatorio}"/>
 			</h:form>
 
@@ -159,9 +162,9 @@
 			<h:form id="frmImovelExcluir">
 				<p><b><h:outputText value="#{msgs.msgExcluirImovel}" /></b></p>
 				<h:panelGrid id="pnlImovelExcluir" columns="2">
-					<h:outputLabel value="#{msgs.codigo}" />
+					<h:outputLabel value="#{msgs.codigo}: " />
 					<h:outputText value="#{imovelBean.imovel.codigo}" />
-					<h:outputLabel value="#{msgs.nome}" />
+					<h:outputLabel value="#{msgs.nome}: " />
 					<h:outputText value="#{imovelBean.imovel.nome}" />
 				</h:panelGrid>
 				<p>
@@ -219,7 +222,7 @@
 
 		<p:dialog header="#{msgs.editarImovel}" widgetVar="dlgEditarImovel"
 			modal="true" appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="520" width="1000">
+			draggable="false" height="500" width="1000">
 			<h:form id="frmImovelEditar">
 				<h:panelGrid id="pnlImovelEditar" columns="2">
 					<p:outputLabel value="ID"/>
@@ -230,15 +233,20 @@
 						<f:selectItems value="#{imovelBean.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.codigo}" />
-					<p:inputText size="30" maxlength="20" placeholder="#{msgs.codigo}"
-						value="#{imovelBean.imovel.codigo}" />
-					<p:outputLabel value="#{msgs.nome}" for="edtNome" />
-					<p:inputText id="edtNome" size="60" maxlength="50" placeholder="#{msgs.nome}" required="true"
-						 requiredMessage="#{msgs.msgNomeObrigatorio}" value="#{imovelBean.imovel.nome}" />
+					<h:panelGrid  columns="4">
+						<p:outputLabel/>
+						<p:inputText size="20" maxlength="20"
+							value="#{imovelBean.imovel.codigo}" />
+						<p:outputLabel value="#{msgs.nome}" for="edtNome" />
+						<p:inputText id="edtNome" size="80" maxlength="50" required="true"
+							 requiredMessage="#{msgs.msgNomeObrigatorio}" value="#{imovelBean.imovel.nome}" />
+					</h:panelGrid>
 					<p:outputLabel value="#{msgs.descricao} " for="edtDesc" />
 					<p:editor id="edtDesc" value="#{imovelBean.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgDescricaoObrigatorio}"/>
 					<p:selectBooleanCheckbox value="#{imovelBean.imovel.ativo}" itemLabel="#{msgs.ativo}" 
 						required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+				</h:panelGrid>
+				<h:panelGrid width="100%" columns="1">						
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
@@ -252,6 +260,7 @@
 						</f:facet>
 					</p:toolbar>
 				</h:panelGrid>
+				<p:outputLabel value="* #{msgs.obrigatorio}"/>
 			</h:form>
 		</p:dialog>
 	</ui:define>

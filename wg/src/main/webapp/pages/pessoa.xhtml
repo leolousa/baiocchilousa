@@ -133,17 +133,20 @@
 					<p:inputText size="40" maxlength="30"
 						value="#{pessoaBean.pessoa.bairro}" />
 					<p:outputLabel value="#{msgs.uf}" for="cbUf" />
-					<p:selectOneMenu id="cbUf" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
-						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
-						<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
-						<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaNova:cbCidades"/>
-					</p:selectOneMenu>					
-					<p:outputLabel value="#{msgs.cidade}" for="cbCidades" />
-					<p:selectOneMenu id="cbCidades" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
-						requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
-						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
-						<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
-					</p:selectOneMenu>
+					<h:panelGrid width="100%" columns="4">
+						<p:outputLabel/>
+						<p:selectOneMenu id="cbUf" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
+							<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
+							<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
+							<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaNova:cbCidades"/>
+						</p:selectOneMenu>					
+						<p:outputLabel value="#{msgs.cidade}" for="cbCidades" />
+						<p:selectOneMenu id="cbCidades" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
+							requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
+							<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
+							<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+						</p:selectOneMenu>
+					</h:panelGrid>
 					<p:outputLabel value="#{msgs.cep}" />
 					<p:inputMask mask="99.999-999" value="#{pessoaBean.pessoa.cep}" />
 					<p:outputLabel value="#{msgs.emailPrincipal}:" />
@@ -161,20 +164,21 @@
 					<p:outputLabel value="#{msgs.foneCel2}:" />
 					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
 						value="#{pessoaBean.pessoa.foneCel2}" />					
-					<p:outputLabel />
+				</h:panelGrid>
+				<h:panelGrid width="100%" columns="1">
 					<p:toolbar>
 						<f:facet name="right">
-							<p:commandButton value="#{msgs.gravar}"
+							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
 								actionListener="#{pessoaBean.salvar}"
 								oncomplete="verificar(xhr, status, args, 'dlgNovaPessoa', 'tblPessoas');"
 								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<p:commandButton value="#{msgs.cancelar}" process="@this"
+							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
 								onclick="PF('dlgNovaPessoa').hide()">
 								<p:resetInput target="pnlPessoaNova" />
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
-				</h:panelGrid>
+				</h:panelGrid>				
 				<p:outputLabel value="* #{msgs.obrigatorio}" />
 			</h:form>
 
@@ -188,20 +192,20 @@
 					<b><h:outputText value="#{msgs.msgExcluirPessoa}" /></b>
 				</p>
 				<h:panelGrid id="pnlPessoaExcluir" columns="2">
-					<h:outputLabel value="#{msgs.codigo}" />
+					<h:outputLabel value="#{msgs.codigo}:" />
 					<h:outputText value="#{pessoaBean.pessoa.id}" />
-					<h:outputLabel value="#{msgs.nome}" />
+					<h:outputLabel value="#{msgs.nome}:" />
 					<h:outputText value="#{pessoaBean.pessoa.nome}" />
 				</h:panelGrid>
 				<p>
 					<h:panelGrid columns="1">
 						<p:toolbar style="width:500px">
 							<f:facet name="right">
-								<p:commandButton value="#{msgs.sim}"
+								<p:commandButton value="#{msgs.sim}" icon="ui-icon-check"
 									actionListener="#{pessoaBean.excluir}"
 									oncomplete="verificar(xhr, status, args, 'dlgExcluirPessoa', 'tblPessoas');"
 									update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-								<p:commandButton value="#{msgs.cancelar}" process="@this"
+								<p:commandButton value="#{msgs.nao}" process="@this" icon="ui-icon-close"
 									onclick="PF('dlgExcluirPessoa').hide()" />
 							</f:facet>
 						</p:toolbar>
@@ -252,17 +256,21 @@
 					<p:inputText size="40" maxlength="30"
 						value="#{pessoaBean.pessoa.bairro}" />
 					<p:outputLabel value="#{msgs.uf}" for="cbUfEdt" />
-					<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
-						<f:selectItem itemLabel="#{pessoaBean.pessoa.cidade.uf.nome}" itemValue="#{pessoaBean.pessoa.cidade.uf.id}"/>
-						<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
-						<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaEditar:cbCidadesEdt"/>
-					</p:selectOneMenu>					
-					<p:outputLabel value="#{msgs.cidade}" for="cbCidadesEdt" />
-					<p:selectOneMenu id="cbCidadesEdt" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
-						requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
-						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
-						<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
-					</p:selectOneMenu>
+					<h:panelGrid width="100%" columns="4">						
+						<h:outputLabel/>						
+						<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
+							<f:selectItem itemLabel="#{pessoaBean.pessoa.cidade.uf.nome}" itemValue="#{pessoaBean.pessoa.cidade.uf.id}"/>
+							<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
+							<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaEditar:cbCidadesEdt"/>
+						</p:selectOneMenu>					
+						<p:outputLabel value="#{msgs.cidade}" for="cbCidadesEdt" />
+						<p:selectOneMenu id="cbCidadesEdt" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
+							requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
+							<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
+							<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+						</p:selectOneMenu>
+					</h:panelGrid>
+					
 					<p:outputLabel value="#{msgs.cep}" />
 					<p:inputMask mask="99.999-999" value="#{pessoaBean.pessoa.cep}" />
 					<p:outputLabel value="#{msgs.emailPrincipal}:" />
@@ -280,21 +288,22 @@
 					<p:outputLabel value="#{msgs.foneCel2}:" />
 					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
 						value="#{pessoaBean.pessoa.foneCel2}" />					
-					<p:outputLabel />
-
+				</h:panelGrid>
+				<h:panelGrid width="100%" columns="1">
 					<p:toolbar>
 						<f:facet name="right">
-							<p:commandButton value="#{msgs.gravar}"
+							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
 								actionListener="#{pessoaBean.editar}"
 								oncomplete="verificar(xhr, status, args, 'dlgEditarPessoa', 'tblPessoas');"
 								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<p:commandButton value="#{msgs.cancelar}" process="@this"
+							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
 								onclick="PF('dlgEditarPessoa').hide()">
 								<p:resetInput target="pnlPessoaEditar" />
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
 				</h:panelGrid>
+				<p:outputLabel value="* #{msgs.obrigatorio}"/>
 			</h:form>
 		</p:dialog>
 	</ui:define>

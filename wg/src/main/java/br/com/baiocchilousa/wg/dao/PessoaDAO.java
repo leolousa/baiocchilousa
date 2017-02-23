@@ -4,4 +4,5 @@ import br.com.baiocchilousa.wg.domain.Pessoa;
 
 public class PessoaDAO extends GenericDAO<Pessoa>{
 
+
 }

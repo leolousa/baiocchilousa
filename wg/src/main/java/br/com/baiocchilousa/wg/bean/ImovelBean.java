@@ -54,7 +54,7 @@ public class ImovelBean implements Serializable {
 			tipos = daoTipo.listar("nome", false);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
@@ -68,7 +68,7 @@ public class ImovelBean implements Serializable {
 			tipos = daoTipo.listar("nome", false);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
@@ -86,6 +86,8 @@ public class ImovelBean implements Serializable {
 			imovel.setUsuarioRegistro(usuario);
 			imovelDAO.merge(imovel);
 
+			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " gravado com sucesso!");
+			
 			imovel = new Imovel();
 
 			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
@@ -93,10 +95,9 @@ public class ImovelBean implements Serializable {
 			tipos = tipoImovelDAO.listar("nome", false);
 			imoveis = imovelDAO.listar("tsRegistro", true);
 
-			Messages.addGlobalInfo("Imóvel gravado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
@@ -128,7 +129,7 @@ public class ImovelBean implements Serializable {
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " atualizado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 	}
 
@@ -154,7 +155,7 @@ public class ImovelBean implements Serializable {
 
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 	}
 
@@ -166,7 +167,7 @@ public class ImovelBean implements Serializable {
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " excluído com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 	}
 

@@ -19,9 +19,11 @@
 			<p:toolbar id="mnuOp">
 				<f:facet name="left">
 					<p:commandButton value="#{msgs.novaPessoa}"
-						actionListener="#{pessoaBean.novo()}"
+						actionListener="#{pessoaBean.novo}"
 						oncomplete="PF('dlgNovaPessoa').show()"
-						update=":frmPessoaNova:pnlPessoaNova" />
+						update=":msgGlobal :frmPessoaNova:pnlPessoaNova">
+						<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
 				</f:facet>
 			</p:toolbar>
 			<p:dataTable id="gridPessoas" var="pessoa" widgetVar="tblPessoas"
@@ -109,19 +111,16 @@
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.nome}:" for="txtNome" />
 					<p:inputText id="txtNome" size="60" maxlength="50" 
-						placeholder="#{msgs.nome}" value="#{pessoaBean.pessoa.nome}"
-						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
+						value="#{pessoaBean.pessoa.nome}" required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
 					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpj" />
-					<p:inputMask id="txtCpfCnpj" size="30"
-						placeholder="#{msgs.cpfcnpj}" value="#{pessoaBean.pessoa.cpfCnpj}"
+					<p:inputText id="txtCpfCnpj" maxlength="20" size="30" value="#{pessoaBean.pessoa.cpfCnpj}"
 						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
 					<p:outputLabel value="#{msgs.dataDeNascimento}:" for="txtDataNasc" />
-					<p:calendar id="txtDataNasc"
+					<p:calendar id="txtDataNasc" size="10"
 							value="#{pessoaBean.pessoa.dataNascimento}" locale="pt"
 							pattern="dd/MM/yyyy" mask="true" readonlyInput="false" showOn="button" navigator="true" />
 					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIe" />
-					<p:inputText id="txtRgIe" size="20" maxlength="20"
-						placeholder="#{msgs.rgie}" value="#{pessoaBean.pessoa.rgIe}" />
+					<p:inputText id="txtRgIe" size="20" maxlength="20" value="#{pessoaBean.pessoa.rgIe}" />
 					<p:outputLabel value="#{msgs.endereco}:" for="txtEndereco"/>
 					<p:inputText id="txtEndereco" size="60" maxlength="40"
 						value="#{pessoaBean.pessoa.endereco}" required="true"
@@ -231,20 +230,17 @@
 						<f:selectItem itemLabel="#{msgs.juridica}" itemValue="J" />
 					</p:selectOneMenu>
 					<p:outputLabel value="#{msgs.nome}:" for="txtNomeEdt" />
-					<p:inputText id="txtNomeEdt" size="60" maxlength="50" 
-						placeholder="#{msgs.nome}" value="#{pessoaBean.pessoa.nome}"
+					<p:inputText id="txtNomeEdt" size="60" maxlength="50" value="#{pessoaBean.pessoa.nome}"
 						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
 					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpjEdt" />
-					<p:inputMask id="txtCpfCnpjEdt" size="30"
-						placeholder="#{msgs.cpfcnpj}" value="#{pessoaBean.pessoa.cpfCnpj}"
+					<p:inputText id="txtCpfCnpjEdt" maxlength="20" size="30" value="#{pessoaBean.pessoa.cpfCnpj}"
 						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
 					<p:outputLabel value="#{msgs.dataDeNascimento}:" for="txtDataNascEdt" />
-					<p:calendar id="txtDataNascEdt"
+					<p:calendar id="txtDataNascEdt" size="10"
 							value="#{pessoaBean.pessoa.dataNascimento}" locale="pt"
 							pattern="dd/MM/yyyy" mask="true" readonlyInput="false" showOn="button" navigator="true" />
 					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIeEdt" />
-					<p:inputText id="txtRgIeEdt" size="20" maxlength="20"
-						placeholder="#{msgs.rgie}" value="#{pessoaBean.pessoa.rgIe}" />
+					<p:inputText id="txtRgIeEdt" size="20" maxlength="20" value="#{pessoaBean.pessoa.rgIe}" />
 					<p:outputLabel value="#{msgs.endereco}:" for="txtEnderecoEdt"/>
 					<p:inputText id="txtEnderecoEdt" size="60" maxlength="40"
 						value="#{pessoaBean.pessoa.endereco}" required="true"

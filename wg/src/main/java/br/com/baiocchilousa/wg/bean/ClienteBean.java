@@ -1,7 +1,6 @@
 package br.com.baiocchilousa.wg.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,55 +11,42 @@ import javax.faces.bean.ViewScoped;
 import org.omnifaces.util.Messages;
 
 import br.com.baiocchilousa.wg.dao.CidadeDAO;
+import br.com.baiocchilousa.wg.dao.ClienteDAO;
 import br.com.baiocchilousa.wg.dao.PessoaDAO;
-import br.com.baiocchilousa.wg.dao.UfDAO;
-import br.com.baiocchilousa.wg.domain.Cidade;
+import br.com.baiocchilousa.wg.domain.Cliente;
 import br.com.baiocchilousa.wg.domain.Pessoa;
-import br.com.baiocchilousa.wg.domain.Uf;
 import br.com.baiocchilousa.wg.domain.Usuario;
 
-
-
 /**
- * Classe Managed Bean do domínio Pessoa.
+ * Classe Managed Bean do domínio Cliente.
  * 
- * @param preparaPessoas()   Método para iniciar a tela de Cadastrar Pessoas
- * @param novo() Método que cria uma nova pessoa
- * @param salvar() Método que salva uma nova pessoa
- * @param editar() Método que edita uma pessoa existente
+ * @param inicio()   Método para iniciar a tela de Cadastrar Clientes
+ * @param novo() Método que cria uma novo cliente
+ * @param salvar() Método que salva um novo cliente
+ * @param editar() Método que edita um cliente existente
  * @author     Leonardo Baiocchi Lousa
  * @version    1.0
  */
 
+@SuppressWarnings("serial")
 @ManagedBean
 @ViewScoped
-public class PessoaBean implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5285162342714753387L;
-	
+public class ClienteBean implements Serializable{
+
+	private List<Cliente> clientes;
+	private List<Cliente> clientesFiltrados;
+	private Cliente cliente;
 	private List<Pessoa> pessoas;
-	private List<Pessoa> pessoasFiltradas;
-	private List<Cidade> cidades;
-	private Uf uf;
-	private List<Uf> estados;
 	private Pessoa pessoa;
 	
+	private boolean flagAtivar;
 	
 	@PostConstruct
 	public void inicio() {
 
 		try {
-			PessoaDAO dao = new PessoaDAO();
-			pessoas = dao.listar("tsRegistro", true);
-			
-			UfDAO ufDAO = new UfDAO();
-			estados = ufDAO.listar("nome", false);
-
-			CidadeDAO cidadeDAO = new CidadeDAO();
-			cidades = cidadeDAO.listar("nome", false);
+			ClienteDAO clienteDAO = new ClienteDAO();
+			clientes = clienteDAO.listar("tsRegistro", true);
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -71,12 +57,10 @@ public class PessoaBean implements Serializable{
 
 	public void novo() {
 		try {
-			pessoa = new Pessoa();
-			uf = new Uf();
-			
-			UfDAO ufDAO = new UfDAO();
-			estados = ufDAO.listar("nome", false); 
-			cidades = new ArrayList<Cidade>();
+			cliente = new Cliente();
+
+			PessoaDAO pessoaDAO = new PessoaDAO();
+			pessoas = pessoaDAO.listar("nome", false);
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -99,16 +83,11 @@ public class PessoaBean implements Serializable{
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " gravada com sucesso!");
 			
 			pessoa = new Pessoa();
-			uf = new Uf();
 
-			CidadeDAO cidadeDAO = new CidadeDAO();
-
-			cidades = cidadeDAO.listar("nome", false);
-			pessoas = pessoaDAO.listar("tsRegistro", true);
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
@@ -133,13 +112,13 @@ public class PessoaBean implements Serializable{
 
 			CidadeDAO cidadeDAO = new CidadeDAO();
 
-			cidades = cidadeDAO.listar("nome", false);
+			
 			pessoas = pessoaDAO.listar("tsRegistro", true);
 			
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " atualizada com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 	}
 
@@ -151,71 +130,72 @@ public class PessoaBean implements Serializable{
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " excluída com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addFlashGlobalError("Erro: " + e.getMessage());
 		}
 	}
 	
 	
 	public void populaCombo(){
-		try {
-			if(uf != null){
-				CidadeDAO cidadeDAO = new CidadeDAO();
-				cidades = cidadeDAO.buscaPorUf(uf.getId(), "nome", false);
-			}else{
-				cidades = new ArrayList<Cidade>();
-			}
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
-		}
+//		try {
+//			if(uf != null){
+//				CidadeDAO cidadeDAO = new CidadeDAO();
+//				cidades = cidadeDAO.buscaPorUf(uf.getId(), "nome", false);
+//			}else{
+//				cidades = new ArrayList<Cidade>();
+//			}
+//		} catch (RuntimeException e) {
+//			e.printStackTrace();
+//			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+//		}
 		
 	}
-	
-	
-	
+
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	public List<Pessoa> getPessoas() {
 		return pessoas;
 	}
+
 	public void setPessoas(List<Pessoa> pessoas) {
 		this.pessoas = pessoas;
 	}
-	public List<Pessoa> getPessoasFiltradas() {
-		return pessoasFiltradas;
-	}
-	public void setPessoasFiltradas(List<Pessoa> pessoasFiltradas) {
-		this.pessoasFiltradas = pessoasFiltradas;
-	}
+
 	public Pessoa getPessoa() {
 		return pessoa;
 	}
+
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
 
-	public List<Cidade> getCidades() {
-		return cidades;
+	public List<Cliente> getClientesFiltrados() {
+		return clientesFiltrados;
 	}
 
-	public void setCidades(List<Cidade> cidades) {
-		this.cidades = cidades;
+	public void setClientesFiltrados(List<Cliente> clientesFiltrados) {
+		this.clientesFiltrados = clientesFiltrados;
 	}
 
-	public List<Uf> getEstados() {
-		return estados;
+	public boolean isFlagAtivar() {
+		return flagAtivar;
 	}
 
-	public void setEstados(List<Uf> estados) {
-		this.estados = estados;
+	public void setFlagAtivar(boolean flagAtivar) {
+		this.flagAtivar = flagAtivar;
 	}
-
-	public Uf getUf() {
-		return uf;
-	}
-
-	public void setUf(Uf uf) {
-		this.uf = uf;
-	}
-	
-	
 	
 }

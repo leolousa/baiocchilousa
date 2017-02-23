@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +22,7 @@ public class Cliente extends GenericDomain{
 	@OneToOne
 	@JoinColumn(nullable = false)
 	private Pessoa pessoa;
-
+	
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(nullable = false)
 	private Date tsRegistro;
@@ -83,6 +84,7 @@ public class Cliente extends GenericDomain{
 	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
+
 	
 
 	

@@ -129,14 +129,15 @@ public class PessoaBean implements Serializable{
 
 			pessoaDAO.editar(pessoa);
 
-			//pessoa = new pessoa();
-
 			CidadeDAO cidadeDAO = new CidadeDAO();
 
 			cidades = cidadeDAO.listar("nome", false);
 			pessoas = pessoaDAO.listar("tsRegistro", true);
 			
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " atualizada com sucesso!");
+			
+			pessoa = new Pessoa();
+			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addGlobalError("Erro: " + e.getMessage());
@@ -161,6 +162,21 @@ public class PessoaBean implements Serializable{
 			if(uf != null){
 				CidadeDAO cidadeDAO = new CidadeDAO();
 				cidades = cidadeDAO.buscaPorUf(uf.getId(), "nome", false);
+			}else{
+				cidades = new ArrayList<Cidade>();
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			Messages.addGlobalError("Erro: " + e.getMessage());
+		}
+		
+	}
+
+	public void populaComboEditar(){
+		try {
+			if(pessoa.getCidade().getUf() != null){
+				CidadeDAO cidadeDAO = new CidadeDAO();
+				cidades = cidadeDAO.buscaPorUf(pessoa.getCidade().getUf().getId(), "nome", false);
 			}else{
 				cidades = new ArrayList<Cidade>();
 			}

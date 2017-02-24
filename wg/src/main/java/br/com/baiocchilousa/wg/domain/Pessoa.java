@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -84,6 +85,17 @@ public class Pessoa extends GenericDomain {
 
 	public Character getTipoPessoa() {
 		return tipoPessoa;
+	}
+	
+	@Transient
+	public String getTipoPessoaFormatado() {
+		String tipoFormatado = "Jurídica";
+		
+		if (tipoPessoa == 'F') {
+			tipoFormatado = "Física";
+		}
+		
+		return tipoFormatado;
 	}
 
 	public void setTipoPessoa(Character tipoPessoa) {

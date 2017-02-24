@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -89,6 +90,23 @@ public class GenericDAO<Entidade> {
 		}
 
 	}
+	
+	@SuppressWarnings({ "unchecked" })
+	public List<Entidade> buscar(String campo, Long valor){
+		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+		try {
+			Criteria consulta = sessao.createCriteria(classe);
+			consulta.add(Restrictions.eq(campo, valor));
+			List<Entidade> lista = (List<Entidade>) consulta.list();
+			return lista;
+		} catch (RuntimeException erro) {
+			throw erro;
+		} finally {
+			sessao.close();
+		}
+
+	}
+	
 	
 	public void excluir(Entidade entidade){
 		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();

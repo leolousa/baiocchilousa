@@ -105,7 +105,7 @@
 				<h:panelGrid id="pnlClienteNovo" columns="2">
 					<p:outputLabel value="#{msgs.pessoa}" for="cdPessoa"/>
 					<p:selectOneMenu id="cdPessoa" value="#{clienteBean.cliente.pessoa}" required="true"
-						requiredMessage="#{msgs.msgPessoaObrigatorio}" filter="true">
+						requiredMessage="#{msgs.msgPessoaObrigatorio}" filter="true" converter="omnifaces.SelectItemsConverter">
 						<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
 						<f:selectItems value="#{clienteBean.pessoas}" var="pessoa" itemLabel="#{pessoa.nome} - #{pessoa.cpfCnpj}" itemValue="#{pessoa}"/>
 					</p:selectOneMenu>
@@ -117,7 +117,7 @@
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
-								actionListener="#{clienteBean.novo}"
+								actionListener="#{clienteBean.salvar}"
 								oncomplete="verificar(xhr, status, args, 'dlgNovoCliente', 'tblClientes');"
 								update=":frmGridClientes:gridClientes :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"

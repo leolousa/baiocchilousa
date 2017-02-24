@@ -76,18 +76,32 @@ public class ClienteBean implements Serializable{
 		usuario.setId(1L);
 
 		try {
-			PessoaDAO pessoaDAO = new PessoaDAO();
-			pessoa.setTsRegistro(new Date());
-			pessoa.setUsuarioRegistro(usuario.getId());
-			pessoaDAO.merge(pessoa);
-			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " gravada com sucesso!");
+			ClienteDAO clienteDAO = new ClienteDAO();
 			
-			pessoa = new Pessoa();
-
+			clientes = clienteDAO.buscar("pessoa.id",cliente.getPessoa().getId());
+			
+			if(!clientes.isEmpty()){
+				Messages.addGlobalError("A pessoa "+ cliente.getPessoa().getNome() +" já está cadastrado como cliente!");
+				cliente = new Cliente();
+				clientes = clienteDAO.listar("tsRegistro", true);
+				
+			}else{
+				cliente.setTsRegistro(new Date());
+				cliente.setUsuarioRegistro(usuario);
+				clienteDAO.merge(cliente);
+				Messages.addGlobalInfo("Cliente " + cliente.getPessoa().getNome() + " gravado com sucesso!");
+				
+				cliente = new Cliente();
+				
+				clientes = clienteDAO.listar("tsRegistro", true);
+				
+				PessoaDAO pessoaDAO = new PessoaDAO();
+				pessoas = pessoaDAO.listar("nome", false);
+			}
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 
 	}
@@ -118,7 +132,7 @@ public class ClienteBean implements Serializable{
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " atualizada com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 	}
 
@@ -130,25 +144,10 @@ public class ClienteBean implements Serializable{
 			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " excluída com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addFlashGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro: " + e.getMessage());
 		}
 	}
 	
-	
-	public void populaCombo(){
-//		try {
-//			if(uf != null){
-//				CidadeDAO cidadeDAO = new CidadeDAO();
-//				cidades = cidadeDAO.buscaPorUf(uf.getId(), "nome", false);
-//			}else{
-//				cidades = new ArrayList<Cidade>();
-//			}
-//		} catch (RuntimeException e) {
-//			e.printStackTrace();
-//			Messages.addFlashGlobalError("Erro: " + e.getMessage());
-//		}
-		
-	}
 
 	public List<Cliente> getClientes() {
 		return clientes;

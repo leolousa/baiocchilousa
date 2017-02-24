@@ -43,8 +43,8 @@
 					<h:outputText value="#{pessoa.nome}" />
 				</p:column>
 
-				<p:column headerText="#{msgs.tipo}" sortBy="#{pessoa.tipoPessoa}">
-					<h:outputText value="#{pessoa.tipoPessoa}" />
+				<p:column headerText="#{msgs.tipo}" sortBy="#{pessoa.tipoPessoaFormatado}">
+					<h:outputText value="#{pessoa.tipoPessoaFormatado}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.cpfcnpj}" filterBy="#{pessoa.cpfCnpj}">
@@ -254,10 +254,10 @@
 					<p:outputLabel value="#{msgs.uf}" for="cbUfEdt" />
 					<h:panelGrid width="100%" columns="4">						
 						<h:outputLabel/>						
-						<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
+						<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.pessoa.cidade.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
 							<f:selectItem itemLabel="#{pessoaBean.pessoa.cidade.uf.nome}" itemValue="#{pessoaBean.pessoa.cidade.uf.id}"/>
 							<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
-							<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaEditar:cbCidadesEdt"/>
+							<p:ajax listener="#{pessoaBean.populaComboEditar}" update=":frmPessoaEditar:cbCidadesEdt"/>
 						</p:selectOneMenu>					
 						<p:outputLabel value="#{msgs.cidade}" for="cbCidadesEdt" />
 						<p:selectOneMenu id="cbCidadesEdt" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"

@@ -64,7 +64,7 @@ public class ClienteBean implements Serializable{
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro ao criar novo: " + e.getMessage());
 		}
 
 	}
@@ -101,7 +101,7 @@ public class ClienteBean implements Serializable{
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro ao salvar: " + e.getMessage());
 		}
 
 	}
@@ -115,36 +115,36 @@ public class ClienteBean implements Serializable{
 		usuario.setId(1L);
 
 		try {
-			PessoaDAO pessoaDAO = new PessoaDAO();
+			ClienteDAO clienteDAO = new ClienteDAO();
 
-			pessoa.setTsAtualizacao(new Date());
-			pessoa.setUsuarioAtualizacao(usuario.getId());
+			cliente.setTsAtualizacao(new Date());
+			cliente.setUsuarioAtualizacao(usuario);
 
-			pessoaDAO.editar(pessoa);
+			clienteDAO.editar(cliente);
 
 			//pessoa = new pessoa();
 
-			CidadeDAO cidadeDAO = new CidadeDAO();
+			//CidadeDAO cidadeDAO = new CidadeDAO();
 
 			
-			pessoas = pessoaDAO.listar("tsRegistro", true);
+			clientes = clienteDAO.listar("tsRegistro", true);
 			
-			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " atualizada com sucesso!");
+			Messages.addGlobalInfo("Cliente " + cliente.getPessoa().getNome() + " atualizado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro ao editar: " + e.getMessage());
 		}
 	}
 
 	public void excluir() {
 		try {
-			PessoaDAO pessoaDAO = new PessoaDAO();
-			pessoaDAO.excluir(pessoa);
-			pessoas = pessoaDAO.listar("tsRegistro", true);
-			Messages.addGlobalInfo("Pessoa " + pessoa.getNome() + " excluída com sucesso!");
+			ClienteDAO clienteDAO = new ClienteDAO();
+			clienteDAO.excluir(cliente);
+			clientes = clienteDAO.listar("tsRegistro", true);
+			Messages.addGlobalInfo("Cliente " + cliente.getPessoa().getNome() + " excluído com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			Messages.addGlobalError("Erro: " + e.getMessage());
+			Messages.addGlobalError("Erro ao excluir: " + e.getMessage());
 		}
 	}
 	

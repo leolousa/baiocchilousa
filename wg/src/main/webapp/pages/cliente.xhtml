@@ -90,7 +90,7 @@
 					<p:commandButton title="#{msgs.excluirCliente}" icon="ui-icon-trash"
 						oncomplete="PF('dlgExcluirCliente').show()"
 						update=":frmClienteExcluir:pnlClienteExcluir">
-						<f:setPropertyActionListener value="#{imovel}"
+						<f:setPropertyActionListener value="#{cliente}"
 							target="#{clienteBean.cliente}" />
 					</p:commandButton>					
 				</p:column>
@@ -173,9 +173,9 @@
 							value="#{msgs.msgDesativarCliente}" /></b>
 				</p>
 				<h:panelGrid id="pnlClienteConfirmar" columns="2">
-					<h:outputLabel value="#{msgs.codigo}" />
+					<h:outputLabel value="#{msgs.codigo}: " />
 					<h:outputText value="#{clienteBean.cliente.id}" />
-					<h:outputLabel value="#{msgs.nome}" />
+					<h:outputLabel value="#{msgs.nome}: " />
 					<h:outputText value="#{clienteBean.cliente.pessoa.nome}" />
 				</h:panelGrid>
 				<p>

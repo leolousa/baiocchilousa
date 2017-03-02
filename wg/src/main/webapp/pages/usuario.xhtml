@@ -132,7 +132,10 @@
 						value="#{usuarioBean.usuario.login}" required="true"/>
 					<p:outputLabel value="#{msgs.senha}" for="txtSenha"/>
 					<p:password  id="txtSenha" size="25" maxlength="20" placeholder="#{msgs.senha}"
-						value="#{usuarioBean.usuario.senha}" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
+						value="#{usuarioBean.usuario.senha}" required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"
+						validatorMessage="#{msgs.msgSenhaValida}">
+						<f:validateLength minimum="8" maximum="20" />
+					</p:password>
 					<p:selectBooleanCheckbox value="#{usuarioBean.usuario.ativo}" itemLabel="#{msgs.ativo}" />
 					<p:toolbar>
 						<f:facet name="right">

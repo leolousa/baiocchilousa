@@ -20,8 +20,8 @@
 				<f:facet name="left">
 					<p:commandButton value="#{msgs.novaPessoa}"
 						actionListener="#{pessoaBean.novo}"
-						oncomplete="PF('dlgNovaPessoa').show()"
-						update=":msgGlobal :frmPessoaNova:pnlPessoaNova">
+						oncomplete="PF('dlgCadastro').show()"
+						update=":msgGlobal :frmCadastro:pnlCadastro">
 						<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 					</p:commandButton>
 				</f:facet>
@@ -79,28 +79,26 @@
 
 				<p:column headerText="#{msgs.comandos}">
 					<p:commandButton title="#{msgs.editarPessoa}" icon="ui-icon-pencil"
-						oncomplete="PF('dlgEditarPessoa').show()"
-						update=":frmPessoaEditar:pnlPessoaEditar">
-						<f:setPropertyActionListener value="#{pessoa}"
-							target="#{pessoaBean.pessoa}" />
+						actionListener="#{pessoaBean.editar}" oncomplete="PF('dlgCadastro').show()"
+						update=":frmCadastro:pnlCadastro">
+						<f:attribute name="pessoaSelecionada" value="#{pessoa}"/>
+						<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.excluirPessoa}" icon="ui-icon-trash"
 						oncomplete="PF('dlgExcluirPessoa').show()"
 						update=":frmPessoaExcluir:pnlPessoaExcluir">
-						<f:setPropertyActionListener value="#{pessoa}"
-							target="#{pessoaBean.pessoa}" />
+						<f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
 
-
-		<p:dialog header="#{msgs.cadastrarNovaPessoa}"
-			widgetVar="dlgNovaPessoa" responsive="true" modal="true"
+		<p:dialog header="#{msgs.cadPessoas}"
+			widgetVar="dlgCadastro" responsive="true" modal="true"
 			appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="520" width="600">
-			<h:form id="frmPessoaNova">
-				<h:panelGrid id="pnlPessoaNova" columns="2">
+			draggable="false" height="480" width="600">
+			<h:form id="frmCadastro">
+				<h:panelGrid id="pnlCadastro" columns="2">
 					<p:outputLabel value="Tipo:" for="cdTiposPessoa" />
 					<p:selectOneMenu id="cdTiposPessoa"
 						value="#{pessoaBean.pessoa.tipoPessoa}" required="true"
@@ -137,7 +135,7 @@
 						<p:selectOneMenu id="cbUf" value="#{pessoaBean.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
 							<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
 							<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
-							<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmPessoaNova:cbCidades"/>
+							<p:ajax listener="#{pessoaBean.populaCombo}" update=":frmCadastro:cbCidades"/>
 						</p:selectOneMenu>					
 						<p:outputLabel value="#{msgs.cidade}" for="cbCidades" />
 						<p:selectOneMenu id="cbCidades" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
@@ -169,11 +167,11 @@
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
 								actionListener="#{pessoaBean.salvar}"
-								oncomplete="verificar(xhr, status, args, 'dlgNovaPessoa', 'tblPessoas');"
+								oncomplete="verificar(xhr, status, args, 'dlgCadastro', 'tblPessoas');"
 								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
-								onclick="PF('dlgNovaPessoa').hide()">
-								<p:resetInput target="pnlPessoaNova" />
+								onclick="PF('dlgCadastro').hide()">
+								<p:resetInput target="pnlCadastro" />
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
@@ -213,95 +211,7 @@
 			</h:form>
 
 		</p:dialog>
-
-		<p:dialog header="#{msgs.editarPessoa}" widgetVar="dlgEditarPessoa"
-			modal="true" appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="520" width="600">
-			<h:form id="frmPessoaEditar">
-				<h:panelGrid id="pnlPessoaEditar" columns="2">
-					<p:outputLabel value="ID" />
-					<h:outputText value="#{pessoaBean.pessoa.id}" />
-					<p:outputLabel value="Tipo:" for="cdTiposPessoaEdt" />
-					<p:selectOneMenu id="cdTiposPessoaEdt"
-						value="#{pessoaBean.pessoa.tipoPessoa}" required="true"
-						requiredMessage="#{msgs.msgTipoObrigatorio}">
-						<f:selectItem itemLabel="#{msgs.selecione}..." itemValue="" />
-						<f:selectItem itemLabel="#{msgs.fisica}" itemValue="F" />
-						<f:selectItem itemLabel="#{msgs.juridica}" itemValue="J" />
-					</p:selectOneMenu>
-					<p:outputLabel value="#{msgs.nome}:" for="txtNomeEdt" />
-					<p:inputText id="txtNomeEdt" size="60" maxlength="50" value="#{pessoaBean.pessoa.nome}"
-						required="true" requiredMessage="#{msgs.msgNomeObrigatorio}" />
-					<p:outputLabel value="#{msgs.cpfcnpj}:" for="txtCpfCnpjEdt" />
-					<p:inputText id="txtCpfCnpjEdt" maxlength="20" size="30" value="#{pessoaBean.pessoa.cpfCnpj}"
-						required="true" requiredMessage="#{msgs.msgCpfCnpjObrigatorio}" />
-					<p:outputLabel value="#{msgs.dataDeNascimento}:" for="txtDataNascEdt" />
-					<p:calendar id="txtDataNascEdt" size="10"
-							value="#{pessoaBean.pessoa.dataNascimento}" locale="pt"
-							pattern="dd/MM/yyyy" mask="true" readonlyInput="false" showOn="button" navigator="true" />
-					<p:outputLabel value="#{msgs.rgie}:" for="txtRgIeEdt" />
-					<p:inputText id="txtRgIeEdt" size="20" maxlength="20" value="#{pessoaBean.pessoa.rgIe}" />
-					<p:outputLabel value="#{msgs.endereco}:" for="txtEnderecoEdt"/>
-					<p:inputText id="txtEnderecoEdt" size="60" maxlength="40"
-						value="#{pessoaBean.pessoa.endereco}" required="true"
-						requiredMessage="#{msgs.msgEnderecoObrigatorio}" />
-					<p:outputLabel value="#{msgs.complemento}:" />
-					<p:inputText size="60" maxlength="40"
-						value="#{pessoaBean.pessoa.complemento}" />
-					<p:outputLabel value="#{msgs.bairro}:" />
-					<p:inputText size="40" maxlength="30"
-						value="#{pessoaBean.pessoa.bairro}" />
-					<p:outputLabel value="#{msgs.uf}" for="cbUfEdt" />
-					<h:panelGrid width="100%" columns="4">						
-						<h:outputLabel/>						
-						<p:selectOneMenu id="cbUfEdt" value="#{pessoaBean.pessoa.cidade.uf}" converter="omnifaces.SelectItemsConverter" filter="true">
-							<f:selectItem itemLabel="#{pessoaBean.pessoa.cidade.uf.nome}" itemValue="#{pessoaBean.pessoa.cidade.uf.id}"/>
-							<f:selectItems value="#{pessoaBean.estados}" var="uf" itemLabel="#{uf.nome}" itemValue="#{uf}"/>
-							<p:ajax listener="#{pessoaBean.populaComboEditar}" update=":frmPessoaEditar:cbCidadesEdt"/>
-						</p:selectOneMenu>					
-						<p:outputLabel value="#{msgs.cidade}" for="cbCidadesEdt" />
-						<p:selectOneMenu id="cbCidadesEdt" value="#{pessoaBean.pessoa.cidade}" converter="omnifaces.SelectItemsConverter" required="true"
-							requiredMessage="#{msgs.msgCidadeObrigatorio}" filter="true">
-							<f:selectItem itemLabel="#{msgs.selecione}..." noSelectionOption="true" />
-							<f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
-					
-					<p:outputLabel value="#{msgs.cep}" />
-					<p:inputMask mask="99.999-999" value="#{pessoaBean.pessoa.cep}" />
-					<p:outputLabel value="#{msgs.emailPrincipal}:" />
-					<p:inputText size="60" maxlength="50"
-						value="#{pessoaBean.pessoa.emailPrincipal}" />					
-					<p:outputLabel value="#{msgs.emailAlternativo}:" />
-					<p:inputText size="60" maxlength="50"
-						value="#{pessoaBean.pessoa.emailAlternativo}" />					
-					<p:outputLabel value="#{msgs.foneFixo}:" />
-					<p:inputMask mask="(99)9999-9999" size="14" maxlength="20"
-						value="#{pessoaBean.pessoa.foneFixo}" />					
-					<p:outputLabel value="#{msgs.foneCel1}:" />
-					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
-						value="#{pessoaBean.pessoa.foneCel1}" />					
-					<p:outputLabel value="#{msgs.foneCel2}:" />
-					<p:inputMask mask="(99)99999-9999" size="14" maxlength="20"
-						value="#{pessoaBean.pessoa.foneCel2}" />					
-				</h:panelGrid>
-				<h:panelGrid width="100%" columns="1">
-					<p:toolbar>
-						<f:facet name="right">
-							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
-								actionListener="#{pessoaBean.editar}"
-								oncomplete="verificar(xhr, status, args, 'dlgEditarPessoa', 'tblPessoas');"
-								update=":frmGridPessoas:gridPessoas :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
-								onclick="PF('dlgEditarPessoa').hide()">
-								<p:resetInput target="pnlPessoaEditar" />
-							</p:commandButton>
-						</f:facet>
-					</p:toolbar>
-				</h:panelGrid>
-				<p:outputLabel value="* #{msgs.obrigatorio}"/>
-			</h:form>
-		</p:dialog>
+		
 	</ui:define>
 
 </ui:composition>

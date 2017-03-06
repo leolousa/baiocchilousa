@@ -10,7 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.omnifaces.util.Messages;
 
-import br.com.baiocchilousa.wg.dao.CidadeDAO;
 import br.com.baiocchilousa.wg.dao.ClienteDAO;
 import br.com.baiocchilousa.wg.dao.PessoaDAO;
 import br.com.baiocchilousa.wg.domain.Cliente;
@@ -45,8 +44,20 @@ public class ClienteBean implements Serializable{
 	public void inicio() {
 
 		try {
+			
+			// Chamada à camada DAO padrão
 			ClienteDAO clienteDAO = new ClienteDAO();
 			clientes = clienteDAO.listar("tsRegistro", true);
+			
+			//Chamada ao serviço REST
+			//Client client = ClientBuilder.newClient();
+			//WebTarget caminho = client.target("http://localhost:8080/wg/rest/cliente");
+			//String json = caminho.request().get(String.class); //Dispara a requisição ao método GET do Serviço e colocal na string json
+			
+			//TODO: fazer classe de conversão de vetor
+			//Gson gson = new Gson();
+			//Cliente[] vetorCliente = gson.fromJson(json, Cliente[].class);
+			//clientes = Arrays.asList(vetorCliente);
 			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -58,15 +69,12 @@ public class ClienteBean implements Serializable{
 	public void novo() {
 		try {
 			cliente = new Cliente();
-
 			PessoaDAO pessoaDAO = new PessoaDAO();
 			pessoas = pessoaDAO.listar("nome", false);
-			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addGlobalError("Erro ao criar novo: " + e.getMessage());
 		}
-
 	}
 
 	public void salvar() {
@@ -86,8 +94,15 @@ public class ClienteBean implements Serializable{
 				clientes = clienteDAO.listar("tsRegistro", true);
 				
 			}else{
-				cliente.setTsRegistro(new Date());
-				cliente.setUsuarioRegistro(usuario);
+				
+				if(cliente.getId() != null){
+					cliente.setTsAtualizacao(new Date());
+					cliente.setUsuarioAtualizacao(usuario);
+				}else{
+					cliente.setTsRegistro(new Date());
+					cliente.setUsuarioRegistro(usuario);
+				}
+				
 				clienteDAO.merge(cliente);
 				Messages.addGlobalInfo("Cliente " + cliente.getPessoa().getNome() + " gravado com sucesso!");
 				
@@ -106,6 +121,19 @@ public class ClienteBean implements Serializable{
 
 	}
 
+	
+	/*public void editar(ActionEvent evento) {
+		try {
+			cliente = (Cliente) evento.getComponent().getAttributes().get("clienteSelecionado");
+			uf = pessoa.getCidade().getUf();
+			UfDAO ufDAO = new UfDAO();
+			estados = ufDAO.listar("nome", false);
+			populaCombo();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			Messages.addGlobalError("Erro: " + e.getMessage());
+		}
+	}*/
 	
 	public void editar() {
 		
@@ -147,6 +175,8 @@ public class ClienteBean implements Serializable{
 			Messages.addGlobalError("Erro ao excluir: " + e.getMessage());
 		}
 	}
+	
+	
 	
 
 	public List<Cliente> getClientes() {

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import org.omnifaces.util.Messages;
 
@@ -19,7 +20,7 @@ import br.com.baiocchilousa.wg.domain.Usuario;
 /**
  * Classe Managed Bean do domínio Imovel.
  * 
- * @param preparaImoveis()   Método para iniciar a tela de Cadastrar Imóveis
+ * @param inicio()   Método para iniciar a tela de Cadastrar Imóveis
  * @param novo() Método que cria um novo imóvel
  * @param salvar() Método que salva um novo imóvel
  * @param editar() Método que edita um imóvel existente
@@ -39,6 +40,7 @@ public class ImovelBean implements Serializable {
 	private List<Imovel> imoveis;
 	private List<Imovel> imoveisFiltrados;
 	private List<TipoImovel> tipos;
+	private TipoImovel tipo;
 	private Imovel imovel;
 
 	private boolean flagAtivar;
@@ -81,9 +83,15 @@ public class ImovelBean implements Serializable {
 
 		try {
 			ImovelDAO imovelDAO = new ImovelDAO();
-			imovel.setAtivo(true);
-			imovel.setTsRegistro(new Date());
-			imovel.setUsuarioRegistro(usuario);
+			
+			if(imovel.getId() != null){
+				imovel.setTsAtualizacao(new Date());
+				imovel.setUsuarioAtualizacao(usuario);
+			}else{
+				imovel.setTsRegistro(new Date());
+				imovel.setUsuarioRegistro(usuario);
+			}
+			
 			imovelDAO.merge(imovel);
 
 			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " gravado com sucesso!");
@@ -103,30 +111,12 @@ public class ImovelBean implements Serializable {
 	}
 
 	
-	public void editar() {
-		
-		// Usuário fake - fazer a classe que traz o usuario
-		Usuario usuario = new Usuario();
-
-		usuario.setId(1L);
-
+	public void editar(ActionEvent evento) {
 		try {
-			ImovelDAO imovelDAO = new ImovelDAO();
-
-			imovel.setAtivo(true);
-			imovel.setTsAtualizacao(new Date());
-			imovel.setUsuarioAtualizacao(usuario);
-
-			imovelDAO.editar(imovel);
-
-			//imovel = new Imovel();
-
+			imovel = (Imovel) evento.getComponent().getAttributes().get("imovelSelecionado");
+			tipo = imovel.getTipoImovel();
 			TipoImovelDAO tipoImovelDAO = new TipoImovelDAO();
-
 			tipos = tipoImovelDAO.listar("nome", false);
-			imoveis = imovelDAO.listar("tsRegistro", true);
-			
-			Messages.addGlobalInfo("Imóvel " + imovel.getNome() + " atualizado com sucesso!");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			Messages.addGlobalError("Erro: " + e.getMessage());
@@ -209,6 +199,14 @@ public class ImovelBean implements Serializable {
 
 	public void setTipos(List<TipoImovel> tipos) {
 		this.tipos = tipos;
+	}
+
+	public TipoImovel getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoImovel tipo) {
+		this.tipo = tipo;
 	}
 
 }

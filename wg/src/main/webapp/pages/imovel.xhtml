@@ -20,8 +20,8 @@
 				<f:facet name="left">
 					<p:commandButton value="#{msgs.novoImovel}" 
 						actionListener="#{imovelBean.novo}"
-						oncomplete="PF('dlgNovoImovel').show()"
-						update=":msgGlobal :frmImovelNovo:pnlImovelNovo">
+						oncomplete="PF('dlgCadastro').show()"
+						update=":msgGlobal :frmCadastro:pnlCadastro">
 						<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />	
 					</p:commandButton>
 						
@@ -99,9 +99,9 @@
 							target="#{imovelBean.imovel}" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.editarImovel}" icon="ui-icon-pencil"
-						oncomplete="PF('dlgEditarImovel').show()"
-						update=":frmImovelEditar:pnlImovelEditar">
-						<f:setPropertyActionListener value="#{imovel}" target="#{imovelBean.imovel}" />
+						actionListener="#{imovelBean.editar}" oncomplete="PF('dlgCadastro').show()"
+						update=":frmCadastro:pnlCadastro">
+						<f:attribute name="imovelSelecionado" value="#{imovel}"/>
 						<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 					</p:commandButton>
 					<p:commandButton title="#{msgs.excluirImovel}" icon="ui-icon-trash"
@@ -115,11 +115,11 @@
 		</h:form>
 
 
-		<p:dialog header="#{msgs.cadastrarNovoImovel}" widgetVar="dlgNovoImovel"
+		<p:dialog header="#{msgs.cadImoveis}" widgetVar="dlgCadastro"
 			responsive="true" modal="true" appendTo="@(body)" resizable="false"
 			closable="true" draggable="false" height="460" width="1000">
-			<h:form id="frmImovelNovo">
-				<h:panelGrid id="pnlImovelNovo" columns="2">
+			<h:form id="frmCadastro">
+				<h:panelGrid id="pnlCadastro" columns="2">
 					<p:outputLabel value="Tipo:" for="cdTiposNovo"/>
 					<p:selectOneMenu id="cdTiposNovo" value="#{imovelBean.imovel.tipoImovel}" converter="omnifaces.SelectItemsConverter" required="true"
 						requiredMessage="#{msgs.msgTipoObrigatorio}" >
@@ -136,24 +136,25 @@
 					</h:panelGrid>
 					<p:outputLabel value="#{msgs.descricao}:" for="txtDesc" />
 					<p:editor id="txtDesc" value="#{imovelBean.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgDescricaoObrigatorio}"/>
+					<p:selectBooleanCheckbox value="#{imovelBean.imovel.ativo}" itemLabel="#{msgs.ativo}" 
+						required="true" requiredMessage="#{msgs.msgAtivoObrigatorio}"/>
 				</h:panelGrid>
 				<h:panelGrid width="100%" columns="1">
 					<p:toolbar>
 						<f:facet name="right">
 							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
 								actionListener="#{imovelBean.salvar}"
-								oncomplete="verificar(xhr, status, args, 'dlgNovoImovel', 'tblImoveis');"
-								update=":frmGridImoveis:gridImoveis :frmImovelNovo:pnlImovelNovo :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
+								oncomplete="verificar(xhr, status, args, 'dlgCadastro', 'tblImoveis');"
+								update=":frmGridImoveis:gridImoveis :frmCadastro:pnlCadastro :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
 							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
-								onclick="PF('dlgNovoImovel').hide()">
-								<p:resetInput target="pnlImovelNovo"/>
+								onclick="PF('dlgCadastro').hide()">
+								<p:resetInput target="pnlCadastro"/>
 							</p:commandButton>
 						</f:facet>
 					</p:toolbar>
 				</h:panelGrid>				
 				<p:outputLabel value="* #{msgs.obrigatorio}"/>
 			</h:form>
-
 		</p:dialog>
 
 		<p:dialog header="#{msgs.excluirImovel}" widgetVar="dlgExcluirImovel"
@@ -184,7 +185,6 @@
 			</h:form>
 
 		</p:dialog>
-
 
 		<p:dialog header="#{msgs.ativarDesativarImovel}" widgetVar="dlgAtiDesImovel"
 			modal="true" appendTo="@(body)" resizable="false" closable="true"
@@ -220,49 +220,6 @@
 
 		</p:dialog>
 
-		<p:dialog header="#{msgs.editarImovel}" widgetVar="dlgEditarImovel"
-			modal="true" appendTo="@(body)" resizable="false" closable="true"
-			draggable="false" height="500" width="1000">
-			<h:form id="frmImovelEditar">
-				<h:panelGrid id="pnlImovelEditar" columns="2">
-					<p:outputLabel value="ID"/>
-					<h:outputText value="#{imovelBean.imovel.id}" />
-					<p:outputLabel value="#{msgs.tipo}" for="cdTiposEdt" />
-					<p:selectOneMenu id="cdTiposEdt" required="true" requiredMessage="#{msgs.msgTipoObrigatorio}" converter="omnifaces.SelectItemsConverter">
-						<f:selectItem itemLabel="#{imovelBean.imovel.tipoImovel.nome}" itemValue="#{imovelBean.imovel.tipoImovel.id}"/>
-						<f:selectItems value="#{imovelBean.tipos}" var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}"/>
-					</p:selectOneMenu>
-					<p:outputLabel value="#{msgs.codigo}" />
-					<h:panelGrid  columns="4">
-						<p:outputLabel/>
-						<p:inputText size="20" maxlength="20"
-							value="#{imovelBean.imovel.codigo}" />
-						<p:outputLabel value="#{msgs.nome}" for="edtNome" />
-						<p:inputText id="edtNome" size="80" maxlength="50" required="true"
-							 requiredMessage="#{msgs.msgNomeObrigatorio}" value="#{imovelBean.imovel.nome}" />
-					</h:panelGrid>
-					<p:outputLabel value="#{msgs.descricao} " for="edtDesc" />
-					<p:editor id="edtDesc" value="#{imovelBean.imovel.descricao}" height="330" required="true" requiredMessage="#{msgs.msgDescricaoObrigatorio}"/>
-					<p:selectBooleanCheckbox value="#{imovelBean.imovel.ativo}" itemLabel="#{msgs.ativo}" 
-						required="true" requiredMessage="#{msgs.msgCampoObrigatorio}"/>
-				</h:panelGrid>
-				<h:panelGrid width="100%" columns="1">						
-					<p:toolbar>
-						<f:facet name="right">
-							<p:commandButton value="#{msgs.gravar}" icon="ui-icon-disk"
-								actionListener="#{imovelBean.editar}"
-								oncomplete="verificar(xhr, status, args, 'dlgEditarImovel', 'tblImoveis');"
-								update=":frmGridImoveis:gridImoveis :msgGlobal" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<p:commandButton value="#{msgs.cancelar}" process="@this" icon="ui-icon-close"
-								onclick="PF('dlgEditarImovel').hide()">
-								<p:resetInput target="pnlImovelEditar"/>
-							</p:commandButton>
-						</f:facet>
-					</p:toolbar>
-				</h:panelGrid>
-				<p:outputLabel value="* #{msgs.obrigatorio}"/>
-			</h:form>
-		</p:dialog>
 	</ui:define>
 
 </ui:composition>

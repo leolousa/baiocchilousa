@@ -1,7 +1,23 @@
-$(function() {
-	var decimal = $('.js-decimal');
-	decimal.maskMoney();
+var Brewer = Brewer || {};
+
+Brewer.MaskMoney = (function() {
 	
-	var inteiro = $('.js-inteiro');
-	inteiro.maskMoney({precision: 0});
+	function MaskMoney() {
+		this.decimal = $('.js-decimal');
+		this.plain = $('.js-inteiro');
+	}
+	
+	MaskMoney.prototype.enable = function() {
+		this.decimal.maskMoney({ decimal: ',', thousands: '.' });
+		this.plain.maskMoney({ precision: 0, thousands: '.' });
+	}
+	
+	return MaskMoney;
+	
+}());
+
+
+$(function() {
+	var maskMoney = new Brewer.MaskMoney();
+	maskMoney.enable();
 });

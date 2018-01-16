@@ -17,15 +17,17 @@
 	</div>
 	
 	<div class="container-fluid">
-		<form>
+		<th:block th:include="fragments/mensagensSucesso"></th:block>
+		<form method="POST" th:object="${estilo}" class="form-vertical  js-form-loading">
+			<th:block th:include="fragments/mensagensErroValidacao"></th:block>
 			<div class="row">
-				<div class="form-group  col-sm-12">
-					<label for="nome">Nome</label>
-					<input type="text" class="form-control" id="nome" autofocus="autofocus"/>
+				<div class="form-group  col-sm-12" th:classappend="${#fields.hasErrors('nome')} ? has-error">
+					<label for="nome" class="control-label">Nome</label>
+					<input id="nome" type="text" class="form-control" th:field="*{nome}" autofocus="autofocus"/>
 				</div>
 			</div>
 				
-			<button type="submit" class="btn  btn-primary">Salvar</button>
+			<button type="submit" class="btn btn-primary">Salvar</button>
 		</form>
 	</div>
 </section>

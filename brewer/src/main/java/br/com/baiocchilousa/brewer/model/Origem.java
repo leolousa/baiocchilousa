@@ -1,4 +1,4 @@
-package br.com.baiocchilousa.brewer.model.Origem;
+package br.com.baiocchilousa.brewer.model;
 
 public enum Origem {
 

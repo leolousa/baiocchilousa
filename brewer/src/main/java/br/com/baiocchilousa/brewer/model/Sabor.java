@@ -1,4 +1,4 @@
-package br.com.baiocchilousa.brewer.model.Sabor;
+package br.com.baiocchilousa.brewer.model;
 
 public enum Sabor {
 

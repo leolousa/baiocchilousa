@@ -77,6 +77,12 @@ public class Cerveja {
 	@JoinColumn(name="codigo_estilo")
 	private Estilo estilo;
 	
+	private  String foto;
+	
+	@Column(name="content_type")
+	private String contentType;
+	
+	
 	//Método callback do JPA para ser executado antes de inserir ou atualizar no banco
 	@PrePersist @PreUpdate
 	private void prePersistUpdate(){
@@ -169,7 +175,19 @@ public class Cerveja {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
+	public String getFoto() {
+		return foto;
+	}
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -177,7 +195,7 @@ public class Cerveja {
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

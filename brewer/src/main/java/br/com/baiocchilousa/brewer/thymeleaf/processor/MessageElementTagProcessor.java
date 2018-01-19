@@ -30,10 +30,10 @@ public class MessageElementTagProcessor extends AbstractElementTagProcessor{
 		IModelFactory modelFactory = context.getModelFactory();
 		IModel model = modelFactory.createModel();
 		
-		model.add(modelFactory.createStandaloneElementTag("th:block", "th:include", "fragments/mensagensSucesso"));
-		model.add(modelFactory.createStandaloneElementTag("th:block", "th:include", "fragments/mensagensErroValidacao"));
+		model.add(modelFactory.createStandaloneElementTag("th:block", "th:replace", "fragments/mensagensSucesso :: messageSuccess"));
+		model.add(modelFactory.createStandaloneElementTag("th:block", "th:replace", "fragments/mensagensErroValidacao :: messageError"));
 		
-		structureHandler.replaceWith(model, true);//Ainda é necessário que o Thymeleaf trabalhe (por isso o true)
+		structureHandler.replaceWith(model, true);//Ainda é necessário que o Thymeleaf processe as suas tags (por isso o true)
 	}
 
 	

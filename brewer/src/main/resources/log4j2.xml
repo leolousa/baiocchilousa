@@ -9,7 +9,7 @@
 	
 	<Loggers>
 		<!-- Loga os Controllers -->
-		<Logger name="br.com.baiocchilousa.brewer.controller" level="error"/>
+		<Logger name="br.com.baiocchilousa.brewer" level="debug"/>
 		
 		<!-- Loga o SQL do Hibernate -->
 		<Logger name="org.hibernate.SQL" level="debug"/>

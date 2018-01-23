@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.util.StringUtils;
 
 import br.com.baiocchilousa.brewer.validation.SKU;
 
@@ -175,15 +176,24 @@ public class Cerveja {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+	
 	public String getFoto() {
 		return foto;
 	}
+	
+	//Método get para retornar a foto ou uma imagem mocada da cerveja
+	public String getFotoOuMock() {
+		return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
+	}
+	
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
+	
 	public String getContentType() {
 		return contentType;
 	}
+	
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}

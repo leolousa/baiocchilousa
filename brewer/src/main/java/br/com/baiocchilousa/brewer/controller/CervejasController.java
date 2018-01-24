@@ -1,9 +1,9 @@
 package br.com.baiocchilousa.brewer.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.baiocchilousa.brewer.controller.page.PageWrapper;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 import br.com.baiocchilousa.brewer.model.Origem;
 import br.com.baiocchilousa.brewer.model.Sabor;
@@ -64,18 +65,18 @@ public class CervejasController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result,
-			@PageableDefault(size = 2) Pageable pageable) {
+			@PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("cerveja/pesquisa-cervejas");
 		mv.addObject("estilos", estilos.findAll());
 		mv.addObject("sabores", Sabor.values());
 		mv.addObject("origens", Origem.values());
 		
-		System.out.println(">>> page number: " + pageable.getPageNumber());
+		//System.out.println(">>> page number: " + pageable.getPageNumber());
 		
 		//mv.addObject("cervejas", cervejas.findAll(pageable));// Spring Data JPA
 		
-		Page<Cerveja> pagina = cervejas.filtrar(cervejaFilter, pageable);
-		mv.addObject("pagina", pagina);//Criteria do Hibernate
+		PageWrapper<Cerveja> paginaWrapper = new PageWrapper<>(cervejas.filtrar(cervejaFilter, pageable), httpServletRequest);
+		mv.addObject("pagina", paginaWrapper);//Criteria do Hibernate
 		return mv;
 		
 	}

@@ -25,7 +25,16 @@ public class PageWrapper<T> {
 
 	public PageWrapper(Page<T> page, HttpServletRequest httpServletRequest) {
 		this.page = page;
-		this.uriBuilder = ServletUriComponentsBuilder.fromRequest(httpServletRequest);
+		
+//		this.uriBuilder = ServletUriComponentsBuilder.fromRequest(httpServletRequest); BUG do Spring quando pesquisando com espaços "Long Neck"
+//		Endereço do erro para acompanhameneo: https://jira.spring.io/browse/SPR-10172
+		
+		String httpUrl = httpServletRequest.getRequestURL().append(
+				httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "")
+				.toString().replaceAll("\\+", "%20");
+		
+		this.uriBuilder = ServletUriComponentsBuilder.fromHttpUrl(httpUrl);// BUG do Spring quando pesquisando com espaços "Long Neck"
+
 	}
 	
 	//Método que relorna o conteúdo da página para exibição no HTML

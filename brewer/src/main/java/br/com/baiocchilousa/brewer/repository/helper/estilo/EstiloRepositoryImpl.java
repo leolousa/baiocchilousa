@@ -9,6 +9,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import br.com.baiocchilousa.brewer.model.Estilo;
 import br.com.baiocchilousa.brewer.repository.filter.EstiloFilter;
+import br.com.baiocchilousa.brewer.repository.paginacao.PaginacaoUtil;
 
 /**
  * Classe com uma maneira de implementar os metodos de filtragem
@@ -34,6 +36,9 @@ public class EstiloRepositoryImpl implements EstilosQueries {
 	@PersistenceContext
 	private EntityManager manager;
 	
+	@Autowired
+	private PaginacaoUtil paginacaoUtil;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
@@ -42,22 +47,7 @@ public class EstiloRepositoryImpl implements EstilosQueries {
 		//Criteria do Hibernate
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Estilo.class);
 		
-		int paginaAtual = pageable.getPageNumber();
-		int totalRegistrosPorPagina = pageable.getPageSize();
-		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
-		
-		
-		criteria.setFirstResult(primeiroRegistro);
-		criteria.setMaxResults(totalRegistrosPorPagina);
-		
-		//Para fazer a ordenação
-		Sort sort = pageable.getSort();
-		
-		if(sort != null){
-			Sort.Order order = sort.iterator().next();
-			String field = order.getProperty();
-			criteria.addOrder(order.isAscending() ? Order.asc(field) : Order.desc(field));
-		}
+		paginacaoUtil.preparar(criteria, pageable);
 		
 		adicionaFiltro(filtro, criteria);
 		

@@ -1,6 +1,7 @@
 package br.com.baiocchilousa.brewer.thymeleaf.processor;
 
 import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IAttribute;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IModelFactory;
 import org.thymeleaf.model.IProcessableElementTag;
@@ -11,18 +12,17 @@ import org.thymeleaf.templatemode.TemplateMode;
 /**
  * Classe que extende o Thymeleaf para criar um componente customizado (TAG HTML)
  * 
- * <brewer:message />
+ * <brewer:order page="${pagina}" field="sku" text="SKU"/>
  * 
- * (Exibe mensagens na página HTML)
+ * (Ordenador de colunas numa tabela HTML)
  *
  */
+public class OrderElementTagProcessor extends AbstractElementTagProcessor{
 
-public class MessageElementTagProcessor extends AbstractElementTagProcessor{
-
-	private static final String NOME_TAG = "message";
+	private static final String NOME_TAG = "order";
 	private static final int PRECEDENCIA = 1000;
 	
-	public MessageElementTagProcessor(String dialectPrefix) {
+	public OrderElementTagProcessor(String dialectPrefix) {
 		super(TemplateMode.HTML, dialectPrefix, NOME_TAG, true, null, false, PRECEDENCIA);
 	}
 	
@@ -31,13 +31,17 @@ public class MessageElementTagProcessor extends AbstractElementTagProcessor{
 			IElementTagStructureHandler structureHandler) {
 		
 		IModelFactory modelFactory = context.getModelFactory();
-		IModel model = modelFactory.createModel();
+
+		IAttribute page = tag.getAttribute("page");
+		IAttribute field = tag.getAttribute("field");
+		IAttribute text = tag.getAttribute("text");
 		
-		model.add(modelFactory.createStandaloneElementTag("th:block", "th:replace", "fragments/mensagensSucesso :: messageSuccess"));
-		model.add(modelFactory.createStandaloneElementTag("th:block", "th:replace", "fragments/mensagensErroValidacao :: messageError"));
+		IModel model = modelFactory.createModel();
+		model.add(modelFactory.createStandaloneElementTag("th:block"
+				, "th:replace"
+				, String.format("fragments/ordenacao :: order (%s, %s, %s)", page.getValue(), field.getValue(), text.getValue())));
 		
 		structureHandler.replaceWith(model, true);//Ainda é necessário que o Thymeleaf processe as suas tags (por isso o true)
 	}
 
-	
 }

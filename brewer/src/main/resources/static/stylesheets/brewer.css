@@ -113,7 +113,20 @@
 }
 
 
+/* Colunas - Pesquisa de Estilos */
 
+.table-estilos-col-codigo {
+	width: 90px;
+	text-align: center;
+}
+
+.table-estilos-col-nome {
+	
+}
+
+.table-estilos-col-acoes {
+	width: 80px;
+}
 
 
 

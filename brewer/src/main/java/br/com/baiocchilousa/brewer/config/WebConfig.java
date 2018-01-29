@@ -26,7 +26,11 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
+
 import br.com.baiocchilousa.brewer.controller.CervejasController;
+import br.com.baiocchilousa.brewer.controller.converter.CidadeConverter;
+import br.com.baiocchilousa.brewer.controller.converter.EstadoConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstiloConverter;
 import br.com.baiocchilousa.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -60,7 +64,13 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		
 		//Dialeto do Thymeleaf
 		engine.addDialect(new LayoutDialect());
+		
+		//Dialeto customizado Brewer
 		engine.addDialect(new BrewerDialect());
+		
+		//Dialeto do data extra attribute
+		engine.addDialect(new DataAttributeDialect());
+		
 		return engine;
 	}
 	
@@ -81,10 +91,19 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	@Bean
 	public FormattingConversionService mvcConversionService(){
 		
-		//Formata a classe Estilo
+		//Converter
 		DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
-		conversionService.addConverter(new EstiloConverter());
 
+		//Formata a classe Estilo
+		conversionService.addConverter(new EstiloConverter());
+		
+		//Formata a classe Cidade
+		conversionService.addConverter(new CidadeConverter());
+		
+		//Formata a classe Estado
+		conversionService.addConverter(new EstadoConverter());
+
+		
 		//Formata o bigdecimal
 		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
 		conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);

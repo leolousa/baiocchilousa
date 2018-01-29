@@ -14,7 +14,7 @@
 		<!-- Loga o SQL do Hibernate -->
 		<Logger name="org.hibernate.SQL" level="debug"/>
 	
-		<Root level="error">
+		<Root level="info">
 			<AppenderRef ref="Console" />
 		</Root>
 	</Loggers>

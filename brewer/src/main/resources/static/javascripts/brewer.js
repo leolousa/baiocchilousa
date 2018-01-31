@@ -1,5 +1,6 @@
 var Brewer = Brewer || {};
 
+//Máscara de dinheiro
 Brewer.MaskMoney = (function() {
 	
 	function MaskMoney() {
@@ -16,6 +17,7 @@ Brewer.MaskMoney = (function() {
 	
 }());
 
+//Máscara de número de telefone
 Brewer.MaskPhoneNumber = (function() {
 
 	function MaskPhoneNumber() {
@@ -41,6 +43,7 @@ Brewer.MaskPhoneNumber = (function() {
 	
 }());
 
+//Máscara de CEP
 Brewer.MaskCep = (function() {
 	
 	function MaskCep() {
@@ -55,6 +58,7 @@ Brewer.MaskCep = (function() {
 	
 }());
 
+//Habilita as máscaras
 $(function() {
 	var maskMoney = new Brewer.MaskMoney();
 	maskMoney.enable();

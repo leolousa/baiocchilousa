@@ -39,7 +39,7 @@ public class OrderElementTagProcessor extends AbstractElementTagProcessor{
 		IModel model = modelFactory.createModel();
 		model.add(modelFactory.createStandaloneElementTag("th:block"
 				, "th:replace"
-				, String.format("fragments/ordenacao :: order (%s, %s, %s)", page.getValue(), field.getValue(), text.getValue())));
+				, String.format("fragments/ordenacao :: order (%s, %s, '%s')", page.getValue(), field.getValue(), text.getValue())));
 		
 		structureHandler.replaceWith(model, true);//Ainda é necessário que o Thymeleaf processe as suas tags (por isso o true)
 	}

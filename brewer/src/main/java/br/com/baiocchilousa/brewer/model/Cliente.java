@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -59,10 +60,17 @@ public class Cliente implements Serializable {
 	@Embedded
 	private Endereco endereco;
 
+	//Antes de persistir ou atualizar remove os caracteres especiais
 	@PrePersist @PreUpdate
 	private void prePersistPreUpdate() {
 		//Remove os caracteres especiais do campo
 		this.cpfOuCnpj = TipoPessoa.removerFormatacao(this.cpfOuCnpj);
+	}
+	
+	//Após carregar o objeto, formata a propriedade cpfOuCnpj
+	@PostLoad
+	private void postLoad() {
+		this.cpfOuCnpj = this.tipoPessoa.formatar(this.cpfOuCnpj);
 	}
 	
 	
@@ -122,6 +130,7 @@ public class Cliente implements Serializable {
 		this.endereco = endereco;
 	}
 	
+	//Método Get inserido para usar como busca de um cpfCnpj já cadastrado 
 	public String getCpfOuCnpjSemFormatacao() {
 		return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
 	}

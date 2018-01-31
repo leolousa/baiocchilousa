@@ -66,6 +66,13 @@ public class Endereco implements Serializable{
 		this.estado = estado;
 	}
 	
-	
+	//Método criado para concatenar o nome da cidade com a sigla do estado
+	public String getNomeCidadeSiglaEstado() {
+		if(this.cidade != null) {
+			return this.cidade.getNome() + "/" + this.cidade.getEstado().getSigla();
+		}
+		
+		return null;
+	}
 	
 }

@@ -6,6 +6,7 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,10 @@ public class CidadeRepositoryImpl implements CidadesQueries{
 	public Page<Cidade> filtrar(CidadeFilter filtro, Pageable pageable) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Cidade.class);
 		
+		
 		paginacaoUtil.preparar(criteria, pageable);
 		adicionarFiltro(filtro, criteria);
+		criteria.addOrder(Order.asc("nome"));
 		criteria.createAlias("estado", "e");
 				
 		return new PageImpl<>(criteria.list(), pageable, total(filtro));

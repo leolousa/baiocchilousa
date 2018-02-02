@@ -13,11 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import br.com.baiocchilousa.brewer.validation.AtributoConfirmacao;
+
+@AtributoConfirmacao(atributo = "senha", atributoConfirmacao = "confirmacaoSenha", message = "A confirmação da senha não confere")//Anotação personalizada para comparar a digitação da senha
 @Entity
 @Table(name = "usuario")
 public class Usuario implements Serializable{
@@ -49,42 +53,72 @@ public class Usuario implements Serializable{
 	@Column(name = "data_nascimento")
 	private LocalDate dataNascimento;
 	
+	@Transient
+	private String confirmacaoSenha;
+	
 	
 	public Long getCodigo() {
 		return codigo;
 	}
+	
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public String getSenha() {
 		return senha;
 	}
+	
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+	
 	public Boolean getAtivo() {
 		return ativo;
 	}
+	
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+	
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
+	
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+	
+	public List<Grupo> getGrupos() {
+		return grupos;
+	}
+	
+	public void setGrupos(List<Grupo> grupos) {
+		this.grupos = grupos;
+	}
+	
+	public String getConfirmacaoSenha() {
+		return confirmacaoSenha;
+	}
+	
+	public void setConfirmacaoSenha(String confirmacaoSenha) {
+		this.confirmacaoSenha = confirmacaoSenha;
 	}
 	@Override
 	public int hashCode() {
@@ -93,6 +127,8 @@ public class Usuario implements Serializable{
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -109,11 +145,6 @@ public class Usuario implements Serializable{
 			return false;
 		return true;
 	}
-	public List<Grupo> getGrupos() {
-		return grupos;
-	}
-	public void setGrupos(List<Grupo> grupos) {
-		this.grupos = grupos;
-	}
+
 	
 }

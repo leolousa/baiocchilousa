@@ -9,8 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,7 +45,7 @@ public class ClientesController {
 		return mv;
 	}
 	
-	@RequestMapping(value="/novo", method = RequestMethod.POST)
+	@PostMapping(value="/novo")
 	public ModelAndView salvar(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes){
 		
 		if(result.hasErrors()){

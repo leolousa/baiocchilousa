@@ -10,20 +10,25 @@ import javax.validation.OverridesAttribute;
 import javax.validation.Payload;
 import javax.validation.constraints.Pattern;
 
+import br.com.baiocchilousa.brewer.validation.validator.AtributoConfirmacaoValidator;
+
 /**
- * Annotation personalizada para validação do campo SKU
+ * Annotation personalizada para validar a confirmação de senha
  * @return
  */
 
-@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.TYPE })//Esta anotação só pode ser anotada em um Type (Classe)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {})
-@Pattern(regexp="([a-zA-Z]{2}\\d{4})?")
-public @interface SKU {
+@Constraint(validatedBy = { AtributoConfirmacaoValidator.class })// Classe que efetivamente faz a validação
+public @interface AtributoConfirmacao {
 	
 	@OverridesAttribute(constraint = Pattern.class, name = "message")
-	String message() default "SKU deve seguir o padrão XX9999";
+	String message() default "Atributos não conferem";
 
 	Class<?>[] groups() default {};//Propriedade para agrupar validações
 	Class<? extends Payload>[] payload() default {};//Propriedades para carregar mais informações da anotação
+	
+	String atributo();
+	
+	String atributoConfirmacao();
 }

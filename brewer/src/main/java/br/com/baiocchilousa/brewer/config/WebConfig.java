@@ -1,6 +1,7 @@
 package br.com.baiocchilousa.brewer.config;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -10,10 +11,13 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
@@ -37,6 +41,7 @@ import br.com.baiocchilousa.brewer.controller.CervejasController;
 import br.com.baiocchilousa.brewer.controller.converter.CidadeConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstadoConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstiloConverter;
+import br.com.baiocchilousa.brewer.controller.converter.GrupoConverter;
 import br.com.baiocchilousa.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -94,6 +99,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
 	}
 	
+	//Método que disponibiliza o Converter para uso na aplicação
 	@Bean
 	public FormattingConversionService mvcConversionService(){
 		
@@ -109,6 +115,8 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		//Formata a classe Estado
 		conversionService.addConverter(new EstadoConverter());
 
+		//Formata a classe Grupo
+		conversionService.addConverter(new GrupoConverter());
 		
 		//Formata o bigdecimal
 		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
@@ -117,6 +125,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		//Formata o inteiro
 		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
 		conversionService.addFormatterForFieldType(Integer.class, integerFormatter);
+		
+		//Formata a data para dd/MM/yyyy - Brasil
+		DateTimeFormatterRegistrar dateTimeFormatter = new DateTimeFormatterRegistrar();
+		dateTimeFormatter.setDateFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		dateTimeFormatter.registerFormatters(conversionService);
 		
 		return conversionService;
 	}
@@ -138,4 +151,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		return cacheManager;
 	}
 
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource bundle = new ReloadableResourceBundleMessageSource();
+		bundle.setBasename("classpath:/messages");
+		bundle.setDefaultEncoding("UTF-8"); //Lista de caracteres acentuados:  http://www.utf8-chartable.de/
+		return bundle;
+	}
 }

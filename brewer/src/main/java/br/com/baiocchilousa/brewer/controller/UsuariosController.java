@@ -14,6 +14,7 @@ import br.com.baiocchilousa.brewer.model.Usuario;
 import br.com.baiocchilousa.brewer.repository.GrupoRepository;
 import br.com.baiocchilousa.brewer.service.CadastroUsuarioService;
 import br.com.baiocchilousa.brewer.service.exception.EmailUsuarioJaCadastradoException;
+import br.com.baiocchilousa.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -44,6 +45,9 @@ public class UsuariosController {
 			cadastroUsuarioService.salvar(usuario);
 		} catch (EmailUsuarioJaCadastradoException e) {
 			result.rejectValue("email", e.getMessage(), e.getMessage());
+			return novo(usuario);
+		} catch (SenhaObrigatoriaUsuarioException e) {
+			result.rejectValue("senha", e.getMessage(), e.getMessage());
 			return novo(usuario);
 		}
 		

@@ -55,6 +55,10 @@ public class Usuario implements Serializable{
 	@Transient
 	private String confirmacaoSenha;
 	
+	public boolean isNovo() {
+		return codigo == null;
+	}
+	
 	
 	public Long getCodigo() {
 		return codigo;

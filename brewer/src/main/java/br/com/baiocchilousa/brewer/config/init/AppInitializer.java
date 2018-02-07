@@ -8,14 +8,16 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import br.com.baiocchilousa.brewer.config.JPAConfig;
+import br.com.baiocchilousa.brewer.config.SecurityConfig;
 import br.com.baiocchilousa.brewer.config.ServiceConfig;
 import br.com.baiocchilousa.brewer.config.WebConfig;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+	//Mapeia as classes de configuração
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] { JPAConfig.class, ServiceConfig.class};
+		return new Class<?>[] { JPAConfig.class, ServiceConfig.class, SecurityConfig.class};
 	}
 
 	@Override

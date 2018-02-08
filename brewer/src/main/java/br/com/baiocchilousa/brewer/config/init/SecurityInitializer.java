@@ -2,7 +2,7 @@ package br.com.baiocchilousa.brewer.config.init;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 /**
- * Classe de configuração do Spring Secutity
+ * Classe de inicialização/configuração do Spring Secutity
  * @author leolo
  *
  */

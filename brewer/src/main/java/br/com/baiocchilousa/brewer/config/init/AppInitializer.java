@@ -11,7 +11,11 @@ import br.com.baiocchilousa.brewer.config.JPAConfig;
 import br.com.baiocchilousa.brewer.config.SecurityConfig;
 import br.com.baiocchilousa.brewer.config.ServiceConfig;
 import br.com.baiocchilousa.brewer.config.WebConfig;
-
+/**
+ * Classe de inicialização da aplicação
+ * @author leolo
+ *
+ */
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	//Mapeia as classes de configuração
@@ -29,9 +33,9 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	protected String[] getServletMappings() {
 		return new String[] {"/"};
 	}
-
-	@Override
+	
 	//Força o Encode para UTF-8
+	@Override
 	protected Filter[] getServletFilters() {
 		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
 		characterEncodingFilter.setEncoding("UTF-8");
@@ -41,7 +45,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	}
 	
 	@Override
-	//Configura Multipart para ser enviado ao servidor
+	//Configura File/Multipart para ser enviado ao servidor
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setMultipartConfig(new MultipartConfigElement(""));
 	}

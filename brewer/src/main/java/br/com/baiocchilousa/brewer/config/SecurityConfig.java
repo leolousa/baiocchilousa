@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import br.com.baiocchilousa.brewer.security.AppUserDetailsService;
 
@@ -42,15 +43,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/cidades/nova").hasAuthority("CADASTRAR_CIDADE")
-				.antMatchers("/usuarios/**").hasAuthority("CADASTRAR_USUARIO")
+				.antMatchers("/cidades/nova").hasRole("CADASTRAR_CIDADE")
+				.antMatchers("/usuarios/**").hasRole("CADASTRAR_USUARIO")
 				.anyRequest().authenticated()//Regra: Qualquer request deve ser autenticado à partir daqui!
 				.and()
 			.formLogin()
-			.loginPage("/login")
-			.permitAll()
-			.and()
-			.csrf().disable();
+				.loginPage("/login")//Página de login
+				.permitAll()
+				.and()
+			.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")) //Página de logout
+				.and()
+			.exceptionHandling()//Trata as excessões
+				.accessDeniedPage("/403")
+				.and()
+			.sessionManagement()
+				.invalidSessionUrl("/login")// Tentar fazer POST sem sessão redireciona para a página
+				.maximumSessions(1)//Máximo de sessões para cada usuário
+				.expiredUrl("/login");//Encerra a sessão e encaminha para a página de login;
 	}
 	
 	@Bean

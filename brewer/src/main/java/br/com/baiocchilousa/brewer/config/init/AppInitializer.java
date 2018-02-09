@@ -37,11 +37,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	//Força o Encode para UTF-8
 	@Override
 	protected Filter[] getServletFilters() {
-		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-		characterEncodingFilter.setEncoding("UTF-8");
-		characterEncodingFilter.setForceEncoding(true);
-		
-		return new Filter[] { characterEncodingFilter };
+		return new Filter[] { };
 	}
 	
 	@Override

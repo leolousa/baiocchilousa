@@ -5,7 +5,7 @@
 	  layout:decorate="~{layout/layout-padrao}"
 	  xmlns:brewer="http://brewer.baiocchilousa.com.br">
 <head>
-	<title>Pesquisa de estilos</title>
+	<title>Pesquisa de usuários</title>
 </head>
 <body>
 	<section layout:fragment="conteudo">
@@ -13,13 +13,13 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-xs-10">
-						<h1>Pesquisa de estilos</h1>
+						<h1>Pesquisa de usuários</h1>
 					</div>
 					
 					<div class="col-xs-2">
 						<div class="aw-page-header-controls">
-							<a class="btn  btn-default" th:href="@{/estilos/novo}">
-								<i class="glyphicon  glyphicon-plus-sign"></i> <span class="hidden-xs  hidden-sm">Novo estilo</span>
+							<a class="btn  btn-default" th:href="@{/usuarios/novo}">
+								<i class="glyphicon  glyphicon-plus-sign"></i> <span class="hidden-xs  hidden-sm">Novo usuario</span>
 							</a>
 						</div>
 					</div>
@@ -28,13 +28,18 @@
 		</div>
 		
 		<div class="container-fluid">
-			<form method="GET" th:object="${estiloFilter}">
+			<form method="GET" th:object="${usuarioFilter}">
 				<div class="row">
-					<div class="form-group  col-sm-12">
-						<label class="control-label" for="estilo">Estilo</label>
-						<input type="text" class="form-control" id="estilo" autofocus="autofocus" th:field="*{nome}"/>
+					<div class="form-group  col-sm-8" >
+						<label class="control-label" for="nome">Nome</label>
+						<input type="text" class="form-control" id="nome" th:field="*{nome}"/>
+					</div>
+					<div class="form-group  col-sm-4" >
+						<label class="control-label" for="email">E-Mail</label>
+						<input type="text" class="form-control" id="email" th:field="*{email}"/>
 					</div>
 				</div>
+				
 				<button type="submit" class="btn  btn-primary">Pesquisar</button>
 			</form>
 			
@@ -42,18 +47,20 @@
 				<table class="table  table-hover">
 					<thead>
 						<tr>
-							<th class="table-estilos-col-codigo">Codigo</th>
-							<th class="table-estilos-col-nome">
+							<th class="table-clientes-col-nome">
 								<brewer:order page="${pagina}" field="nome" text="Nome"/>
 							</th>
+							<th class="table-clientes-col-cpf-cnpj">E-mail</th>
+							<th class="table-clientes-col-cidade-estado">Status</th>
 							<th class="table-col-acoes"></th>
 						</tr>
 					</thead>
 					
 					<tbody>
-						<tr th:each="estilo : ${pagina.conteudo}">
-							<td class="text-center" th:text="${estilo.codigo}">1</td>
-							<td th:text="${estilo.nome}">Pale Lager</td>
+						<tr th:each="usuario : ${pagina.conteudo}">
+							<td th:text="${usuario.nome}">João da Silva</td>
+							<td th:text="${usuario.email}">joao@uol.com.br</td>
+							<td class="text-left" th:text="${usuario.ativo}">Status</td>
 							<td class="text-center">
 								<a class="btn  btn-link  btn-xs" title="Editar"> 
 									<i class="glyphicon glyphicon-pencil"></i>
@@ -64,13 +71,14 @@
 							</td>
 						</tr>
 						<tr th:if="${pagina.vazia}">
-							<td colspan="7">Nenhum estilo encontrado</td>
+							<td colspan="7">Nenhum usuário encontrado</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			
 			<brewer:pagination page="${pagina}"/>
+			
 		</div>
 	</section>
 </body>

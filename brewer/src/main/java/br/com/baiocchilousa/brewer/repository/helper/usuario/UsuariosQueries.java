@@ -6,9 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import br.com.baiocchilousa.brewer.model.Cliente;
 import br.com.baiocchilousa.brewer.model.Usuario;
-import br.com.baiocchilousa.brewer.repository.filter.ClienteFilter;
 import br.com.baiocchilousa.brewer.repository.filter.UsuarioFilter;
 
 public interface UsuariosQueries {

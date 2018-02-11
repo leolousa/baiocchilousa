@@ -43,9 +43,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/cidades/nova").hasRole("CADASTRAR_CIDADE")
+				.antMatchers("/cidades/nova").hasRole("CADASTRAR_CIDADE")//Mapeia as páginas com permissão
 				.antMatchers("/usuarios/**").hasRole("CADASTRAR_USUARIO")
 				.anyRequest().authenticated()//Regra: Qualquer request deve ser autenticado à partir daqui!
+				//.anyRequest().denyAll()//Nega acesso a todas as páginas exceto aquelas mapeadas no antMatchers
 				.and()
 			.formLogin()
 				.loginPage("/login")//Página de login

@@ -43,11 +43,12 @@ import br.com.baiocchilousa.brewer.controller.converter.CidadeConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstadoConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstiloConverter;
 import br.com.baiocchilousa.brewer.controller.converter.GrupoConverter;
+import br.com.baiocchilousa.brewer.session.TabelaItensVenda;
 import br.com.baiocchilousa.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CervejasController.class})
+@ComponentScan(basePackageClasses = { CervejasController.class, TabelaItensVenda.class })
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableCaching //Habilita a implementação do cache no Spring

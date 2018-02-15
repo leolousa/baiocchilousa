@@ -22,6 +22,8 @@ import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.hibernate.validator.group.GroupSequenceProvider;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.baiocchilousa.brewer.model.validation.ClienteGroupSequenceProvider;
 import br.com.baiocchilousa.brewer.model.validation.group.CnpjGroup;
 import br.com.baiocchilousa.brewer.model.validation.group.CpfGroup;
@@ -57,6 +59,7 @@ public class Cliente implements Serializable {
 	@Email(message = "E-mail inválido")
 	private String email;
 	
+	@JsonIgnore// Para não inicializar o objeto endereço na pesquisa rápida de clientes
 	@Embedded
 	private Endereco endereco;
 

@@ -15,6 +15,7 @@ import br.com.baiocchilousa.brewer.service.exception.NomeEstiloJaCadastradoExcep
 @ControllerAdvice
 public class ControllerAdviceExceptionHandler {
 
+	//Qualquer parte da aplicação que lançar uma excessao NomeEstiloJaCadastradoException será tratada aqui
 	@ExceptionHandler(NomeEstiloJaCadastradoException.class)
 	public ResponseEntity<String> handlerNomeEstiloJaCadastradoException(NomeEstiloJaCadastradoException e){
 		return ResponseEntity.badRequest().body(e.getMessage());

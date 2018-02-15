@@ -1,16 +1,23 @@
 package br.com.baiocchilousa.brewer.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -75,4 +82,23 @@ public class ClientesController {
 		
 	}
 
+	@RequestMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody List<Cliente> pesquisar(String nome) {
+		validarTamanhoDoNome(nome);
+		return clientes.findByNomeStartingWithIgnoreCase(nome);
+		
+	}
+
+	//Método para validar a entrada da pesquisa rápida
+	private void validarTamanhoDoNome(String nome) {
+		if(StringUtils.isEmpty(nome) || nome.length() < 3) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	//Método para trara uma IlegalArgumentExeption no Controller
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<Void> tratarIlegalArgumenteException(IllegalArgumentException e) {
+		return ResponseEntity.badRequest().build();
+	}
 }

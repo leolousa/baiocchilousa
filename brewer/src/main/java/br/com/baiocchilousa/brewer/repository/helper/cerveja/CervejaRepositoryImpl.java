@@ -1,5 +1,7 @@
 package br.com.baiocchilousa.brewer.repository.helper.cerveja;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import br.com.baiocchilousa.brewer.dto.CervejaDTO;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 import br.com.baiocchilousa.brewer.repository.filter.CervejaFilter;
 import br.com.baiocchilousa.brewer.repository.paginacao.PaginacaoUtil;
@@ -101,5 +104,20 @@ public class CervejaRepositoryImpl implements CervejasQueries {
 	private boolean isEstiloPresente(CervejaFilter filtro) {
 		return filtro.getEstilo() != null && filtro.getEstilo().getCodigo() != null;
 	}
+
+
+	@Override
+	public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
+		
+		String jpql = "SELECT new br.com.baiocchilousa.brewer.dto.CervejaDTO(codigo, sku, nome, origem, valor, foto) "
+				+ "FROM Cerveja WHERE lower(sku) LIKE lower(:skuOuNome) OR lower(nome) LIKE lower(:skuOuNome)";
+		
+		List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
+				.setParameter("skuOuNome", skuOuNome + "%")
+				.getResultList();
+		
+		return cervejasFiltradas;
+	}
+	
 	
 }

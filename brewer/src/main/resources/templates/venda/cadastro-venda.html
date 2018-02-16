@@ -26,7 +26,7 @@
 	
 	<div class="container-fluid">
 		<form method="POST" th:action="@{/vendas/nova}">
-			
+			<input type="hidden" id="uuid" th:value="${uuid}"/>
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="aw-box">
@@ -114,7 +114,7 @@
 					</div>
 					
 					<div class="bw-tabela-cervejas  js-tabela-cervejas-container">
-						<div class="bw-tabela-cervejas">
+						<div class="bw-tabela-cervejas__vazio">
 							<div class="bw-tabela-cervejas__vazio">
 								<i class="glyphicon  glyphicon-shopping-cart"></i> 
 								<span>Você ainda não adicionou nenhuma cerveja.</span>

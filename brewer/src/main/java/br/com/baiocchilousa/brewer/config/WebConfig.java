@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.number.NumberStyleFormatter;
@@ -43,12 +44,12 @@ import br.com.baiocchilousa.brewer.controller.converter.CidadeConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstadoConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstiloConverter;
 import br.com.baiocchilousa.brewer.controller.converter.GrupoConverter;
-import br.com.baiocchilousa.brewer.session.TabelaItensVenda;
+import br.com.baiocchilousa.brewer.session.TabelasItensSession;
 import br.com.baiocchilousa.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
-@ComponentScan(basePackageClasses = { CervejasController.class, TabelaItensVenda.class })
+@ComponentScan(basePackageClasses = { CervejasController.class, TabelasItensSession.class })
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableCaching //Habilita a implementação do cache no Spring
@@ -162,5 +163,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		bundle.setBasename("classpath:/messages");
 		bundle.setDefaultEncoding("UTF-8"); //Lista de caracteres acentuados:  http://www.utf8-chartable.de/
 		return bundle;
+	}
+	
+	//Para poder, nos controllers, enviar o objeto inteiro sem precisar dar um findOne com o código da entidade 
+	@Bean
+	public DomainClassConverter<FormattingConversionService> domainClassConverter() {
+		return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
 	}
 }

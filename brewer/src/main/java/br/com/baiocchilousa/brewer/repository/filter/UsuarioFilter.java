@@ -5,7 +5,7 @@ import java.util.List;
 import br.com.baiocchilousa.brewer.model.Grupo;
 
 /**
- * Objeto criado para pesquisa de clientes na página de pesquisa
+ * Objeto criado para pesquisa de usuários na página de pesquisa
  * @author leolo
  *
  */

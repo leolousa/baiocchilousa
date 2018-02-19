@@ -84,6 +84,11 @@ public class FotoStorageLocal implements FotoStorage{
 			throw new RuntimeException("Erro lendo a foto", e);
 		}
 	}
+
+	@Override
+	public byte[] recuperarThumbnail(String fotoCerveja) {
+		return recuperar("thumbnail." + fotoCerveja);
+	}
 	
 	@Override
 	public byte[] recuperarFotoTemporaria(String nome) {
@@ -93,7 +98,7 @@ public class FotoStorageLocal implements FotoStorage{
 			throw new RuntimeException("Erro lendo a foto temporária", e);
 		}
 	}
-	
+
 	private void criarPastas() {
 		
 		try {
@@ -119,6 +124,9 @@ public class FotoStorageLocal implements FotoStorage{
 		
 		return novoNome;
 	}
+
+
+	
 
 
 

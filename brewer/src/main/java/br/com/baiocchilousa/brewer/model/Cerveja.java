@@ -198,6 +198,11 @@ public class Cerveja {
 		this.contentType = contentType;
 	}
 	
+	
+	public boolean temFoto() {
+		return !StringUtils.isEmpty(this.foto);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

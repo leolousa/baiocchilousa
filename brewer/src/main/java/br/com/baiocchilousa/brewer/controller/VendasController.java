@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.baiocchilousa.brewer.controller.page.PageWrapper;
 import br.com.baiocchilousa.brewer.controller.validator.VendaValidator;
+import br.com.baiocchilousa.brewer.mail.Mailer;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.model.TipoPessoa;
@@ -53,6 +54,9 @@ public class VendasController {
 	
 	@Autowired
 	private VendaRepository vendas;
+	
+	@Autowired
+	Mailer mailer;	
 	
 	@InitBinder("venda")
 	public void inicializarValidadores(WebDataBinder binder) {
@@ -111,6 +115,7 @@ public class VendasController {
 	//Método que salva e envia por e-mail a venda
 	@PostMapping(value = "/nova", params = "enviarEmail")
 	public ModelAndView enviarEmail(Venda venda, BindingResult result, RedirectAttributes attributes, @AuthenticationPrincipal UsuarioSistema usuarioSistema) {
+
 		validarVenda(venda, result);
 		
 		if(result.hasErrors()) {
@@ -119,8 +124,10 @@ public class VendasController {
 		
 		venda.setUsuario(usuarioSistema.getUsuario());
 		
-		cadastroVendaService.salvar(venda);
-		attributes.addFlashAttribute("mensagem", "Venda salva e e-mail enviado com sucesso");
+		venda = cadastroVendaService.salvar(venda);
+		mailer.enviar(venda);
+		
+		attributes.addFlashAttribute("mensagem", String.format("Venda n. %d salva com sucesso e e-mail enviado!", venda.getCodigo()));
 		return new ModelAndView("redirect:/vendas/nova");
 	}
 	

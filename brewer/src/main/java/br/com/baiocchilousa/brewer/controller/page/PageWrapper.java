@@ -31,7 +31,7 @@ public class PageWrapper<T> {
 		
 		String httpUrl = httpServletRequest.getRequestURL().append(
 				httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "")
-				.toString().replaceAll("\\+", "%20");
+				.toString().replaceAll("\\+", "%20").replaceAll("excluido", "");
 		
 		this.uriBuilder = ServletUriComponentsBuilder.fromHttpUrl(httpUrl);// BUG do Spring quando pesquisando com espaços "Long Neck"
 

@@ -25,12 +25,13 @@ import net.coobird.thumbnailator.name.Rename;
 public class FotoStorageLocal implements FotoStorage{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FotoStorageLocal.class);
+	private static final String THUMBNAIL_PREFIX = "thumbnail.";
 	
 	private Path local;
 	private Path localTemporario;
 	
 	public FotoStorageLocal () {
-		//Caminho a ser salvo no servidor
+		//Caminho a ser salvo no servidor HOME para Linux
 		this(getDefault().getPath(System.getenv("USERPROFILE"), ".brewerfotos"));
 	}
 	
@@ -62,7 +63,7 @@ public class FotoStorageLocal implements FotoStorage{
 	@Override
 	public void salvar(String foto) {
 		try {
-			//Move a foto do local temporário para o local fixo
+			//Move a foto do local temporário para o local definitivo
 			Files.move(this.localTemporario.resolve(foto), this.local.resolve(foto));
 		} catch (IOException e) {
 			throw new RuntimeException("Erro movendo a foto para o destino final", e);
@@ -87,7 +88,7 @@ public class FotoStorageLocal implements FotoStorage{
 
 	@Override
 	public byte[] recuperarThumbnail(String fotoCerveja) {
-		return recuperar("thumbnail." + fotoCerveja);
+		return recuperar(THUMBNAIL_PREFIX + fotoCerveja);
 	}
 	
 	@Override
@@ -99,6 +100,20 @@ public class FotoStorageLocal implements FotoStorage{
 		}
 	}
 
+
+	@Override
+	public void excluir(String foto) {
+		try {
+			//Apaga arquivo da foto da pasta
+			Files.deleteIfExists(this.local.resolve(foto));
+			//Apaga arquivo do Thumbnail da pasta
+			Files.deleteIfExists(this.local.resolve(THUMBNAIL_PREFIX + foto));
+		} catch (IOException e) {
+			LOGGER.warn(String.format("Erro apagando foto '%s'. Mensagem: %s", foto, e.getMessage()));
+		}
+		
+	}
+	
 	private void criarPastas() {
 		
 		try {
@@ -124,6 +139,7 @@ public class FotoStorageLocal implements FotoStorage{
 		
 		return novoNome;
 	}
+
 
 
 	

@@ -64,11 +64,6 @@ public class Usuario implements Serializable{
 	}
 	
 	
-	public boolean isNovo() {
-		return codigo == null;
-	}
-	
-	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -132,6 +127,17 @@ public class Usuario implements Serializable{
 	public void setConfirmacaoSenha(String confirmacaoSenha) {
 		this.confirmacaoSenha = confirmacaoSenha;
 	}
+	
+	public boolean isNovo() {
+		return codigo == null;
+	}
+	
+	public boolean isEdicao() {
+		return codigo != null;
+	}
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

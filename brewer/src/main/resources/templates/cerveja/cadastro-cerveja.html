@@ -15,7 +15,8 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-xs-10">
-						<h1>Cadastro de cerveja</h1>
+						<h1 th:if="${cerveja.nova}">Cadastro de cerveja</h1>
+						<h1 th:unless="${cerveja.nova}" th:text="|Edição da ${cerveja.nome}|">Edição da cerveja Becks 120ml</h1>
 					</div>
 			
 					<div class="col-xs-2">
@@ -32,12 +33,16 @@
 		
 	
 		<div class="container-fluid">
-			<form method="POST" th:action="@{/cervejas/novo}" th:object="${cerveja}" class="form-vertical  js-form-loading">
+			<form method="POST" th:object="${cerveja}" class="form-vertical  js-form-loading"
+			 th:action="${cerveja.nova} ? @{/cervejas/nova} : @{/cervejas/{codigo}(codigo=${cerveja.codigo})}">
 				<!-- ERA ASSIM! <th:block th:include="fragments/mensagensSucesso"></th:block> -->
 				<!-- <th:block th:include="fragments/mensagensErroValidacao"></th:block> -->
 				
 				<!-- Tag personalizada -->
 				<brewer:message />
+				
+				<input type="hidden" th:field="*{codigo}"/>
+				
 				<div class="row">
 					<div class="col-sm-2  form-group  bw-required" brewer:classforerror="sku">
 						<label for="sku" class="control-label ">SKU</label>
@@ -128,6 +133,7 @@
 					<div class="form-group col-sm-12">
 						<input type="hidden" th:field="*{foto}">
 						<input type="hidden" th:field="*{contentType}">
+						<input type="hidden" th:field="*{novaFoto}">
 						
 						<label class="control-label">Foto</label>
 						

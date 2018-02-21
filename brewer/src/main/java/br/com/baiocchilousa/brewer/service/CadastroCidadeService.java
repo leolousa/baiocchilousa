@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.baiocchilousa.brewer.model.Cidade;
-import br.com.baiocchilousa.brewer.model.Cliente;
 import br.com.baiocchilousa.brewer.repository.CidadeRepository;
 import br.com.baiocchilousa.brewer.service.exception.CidadeJaCadastradaException;
-import br.com.baiocchilousa.brewer.service.exception.CpfCnpjClienteJaCadastradoException;
 
+/**
+ * Classe de serviços (regras de negócio costumam ficar nesta classe) 
+ * @author leolo
+ *
+ */
 @Service
 public class CadastroCidadeService {
 

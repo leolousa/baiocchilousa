@@ -10,6 +10,11 @@ import br.com.baiocchilousa.brewer.model.Cliente;
 import br.com.baiocchilousa.brewer.repository.ClienteRepository;
 import br.com.baiocchilousa.brewer.service.exception.CpfCnpjClienteJaCadastradoException;
 
+/**
+ * Classe de serviços (regras de negócio costumam ficar nesta classe) 
+ * @author leolo
+ *
+ */
 @Service
 public class CadastroClienteService {
 

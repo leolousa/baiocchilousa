@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
@@ -80,8 +81,15 @@ public class Cerveja {
 	
 	private  String foto;
 	
+	public boolean isNova() {
+		return codigo == null;
+	}
+	
 	@Column(name="content_type")
 	private String contentType;
+	
+	@Transient
+	private boolean novaFoto;
 	
 	
 	//Método callback do JPA para ser executado antes de inserir ou atualizar no banco
@@ -226,6 +234,12 @@ public class Cerveja {
 		} else if (!codigo.equals(other.codigo))
 			return false;
 		return true;
+	}
+	public boolean isNovaFoto() {
+		return novaFoto;
+	}
+	public void setNovaFoto(boolean novaFoto) {
+		this.novaFoto = novaFoto;
 	}
 	
 	

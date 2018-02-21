@@ -13,6 +13,12 @@ import br.com.baiocchilousa.brewer.repository.UsuarioRepository;
 import br.com.baiocchilousa.brewer.service.exception.EmailUsuarioJaCadastradoException;
 import br.com.baiocchilousa.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 
+
+/**
+ * Classe de serviços (regras de negócio costumam ficar nesta classe) 
+ * @author leolo
+ *
+ */
 @Service
 public class CadastroUsuarioService {
 
@@ -26,7 +32,7 @@ public class CadastroUsuarioService {
 	public void salvar(Usuario usuario){
 		Optional<Usuario> usuarioExistente = usuarios.findByEmail(usuario.getEmail());
 		
-		if(usuarioExistente.isPresent()) {
+		if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
 			throw new EmailUsuarioJaCadastradoException("Usuário já cadastrado com este e-mail!");
 		}
 		
@@ -35,10 +41,17 @@ public class CadastroUsuarioService {
 		}
 		
 		
-		if(usuario.isNovo()) {
+		if(usuario.isNovo() || !StringUtils.isEmpty(usuario.getSenha())) {
 			//Criptografa a senha
 			usuario.setSenha(this.passwordEncoder.encode(usuario.getSenha()));
-			usuario.setConfirmacaoSenha(usuario.getSenha());
+		} else if(StringUtils.isEmpty(usuario.getSenha())){
+			usuario.setSenha(usuarioExistente.get().getSenha());
+		}
+		
+		usuario.setConfirmacaoSenha(usuario.getSenha());
+		
+		if(!usuario.isNovo() && usuario.getAtivo() == null) {
+			usuario.setAtivo(usuarioExistente.get().getAtivo());
 		}
 		
 		usuarios.save(usuario);

@@ -18,9 +18,8 @@ public class CervejaListener {
 	@Autowired
 	private FotoStorage fotoStorage;
 	
-	@EventListener(condition = "#evento.temFoto()")//Condição para executar a anotação do listener deste metodo
+	@EventListener(condition = "#evento.temFoto() and #evento.novaFoto")//Condição para executar a anotação do listener deste metodo
 	public void cervejaSalva(CervejaSalvaEvent evento) {
-		System.out.println(">>>> nova cerveja salva: " + evento.getCerveja().getNome());
 		fotoStorage.salvar(evento.getCerveja().getFoto());
 	}
 }

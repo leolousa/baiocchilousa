@@ -10,6 +10,11 @@ import br.com.baiocchilousa.brewer.model.Estilo;
 import br.com.baiocchilousa.brewer.repository.EstiloRepository;
 import br.com.baiocchilousa.brewer.service.exception.NomeEstiloJaCadastradoException;
 
+/**
+ * Classe de serviços (regras de negócio costumam ficar nesta classe) 
+ * @author leolo
+ *
+ */
 @Service
 public class CadastroEstiloService {
 

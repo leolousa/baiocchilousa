@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 
 /**
- * Classe de evento quando uma cerveja for salvar
+ * Classe de evento quando for salva ruma cerveja
  * @author leolo
  *
  */
@@ -23,6 +23,10 @@ public class CervejaSalvaEvent {
 	
 	public boolean temFoto() {
 		 return !StringUtils.isEmpty(cerveja.getFoto());
+	}
+	
+	public boolean isNovaFoto() {
+		return cerveja.isNovaFoto();
 	}
 	
 	

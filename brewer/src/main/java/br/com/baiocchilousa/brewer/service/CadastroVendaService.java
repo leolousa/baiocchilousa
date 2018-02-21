@@ -1,19 +1,21 @@
 package br.com.baiocchilousa.brewer.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.baiocchilousa.brewer.model.ItemVenda;
 import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.model.Venda;
 import br.com.baiocchilousa.brewer.repository.VendaRepository;
 
+/**
+ * Classe de serviços (regras de negócio costumam ficar nesta classe) 
+ * @author leolo
+ *
+ */
 @Service
 public class CadastroVendaService {
 

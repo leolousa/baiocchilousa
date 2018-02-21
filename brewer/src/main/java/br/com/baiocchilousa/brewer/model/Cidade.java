@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.CacheEvict;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

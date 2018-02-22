@@ -121,15 +121,5 @@ public class UsuarioRepositoryImpl implements UsuariosQueries{
 		}
 	}
 
-
-
-//	
-//	private Long total(UsuarioFilter filtro) {
-//		Criteria criteria = manager.unwrap(Session.class).createCriteria(Usuario.class);
-//		adicionaFiltro(filtro, criteria);
-//		criteria.setProjection(Projections.rowCount());
-//		return (Long) criteria.uniqueResult();
-//	}
-//	
 	
 }

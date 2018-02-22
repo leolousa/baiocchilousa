@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,7 @@ import br.com.baiocchilousa.brewer.controller.page.PageWrapper;
 import br.com.baiocchilousa.brewer.controller.validator.VendaValidator;
 import br.com.baiocchilousa.brewer.mail.Mailer;
 import br.com.baiocchilousa.brewer.model.Cerveja;
+import br.com.baiocchilousa.brewer.model.ItemVenda;
 import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.model.TipoPessoa;
 import br.com.baiocchilousa.brewer.model.Venda;
@@ -67,9 +69,7 @@ public class VendasController {
 	public ModelAndView nova(Venda venda) {
 		ModelAndView mv = new ModelAndView("/venda/cadastro-venda");
 		
-		if(StringUtils.isEmpty(venda.getUuid())) {
-			venda.setUuid(UUID.randomUUID().toString());//ID para o formulário na página de vendas (para cada tela)
-		}
+		setUuid(venda);
 
 		//Adiciona estes objetos para serem persistidos na página e ho Javascript
 		mv.addObject("itens", venda.getItens());
@@ -155,7 +155,7 @@ public class VendasController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(VendaFilter vendaFilter,
-			@PageableDefault(size = 3) Pageable pageable, HttpServletRequest httpServletRequest) {
+			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("/venda/pesquisa-vendas");
 		mv.addObject("todosStatus", StatusVenda.values());
 		mv.addObject("tiposPessoa", TipoPessoa.values());
@@ -163,6 +163,42 @@ public class VendasController {
 		PageWrapper<Venda> paginaWrapper = new PageWrapper<>(vendas.filtrar(vendaFilter, pageable), httpServletRequest);
 		mv.addObject("pagina", paginaWrapper);
 		return mv;
+	}
+	
+	@GetMapping("/{codigo}")
+	public ModelAndView editar(@PathVariable Long codigo) {
+		Venda venda = vendas.buscarComItens(codigo);
+		
+		//Seta o Uuid da sessão para poder pegar os itens da venda a ser editada
+		setUuid(venda);
+		
+		//Preenche os itens da venda a ser editada
+		for(ItemVenda item : venda.getItens()) {
+			tabelaItens.adicionarItem(venda.getUuid(), item.getCerveja(), item.getQuantidade());
+		}
+		
+		ModelAndView mv = nova(venda);
+		mv.addObject(venda);
+		
+		return mv;
+	}
+	
+	
+	@PostMapping(value = "/nova", params = "cancelar")
+	public ModelAndView cancelar(Venda venda, BindingResult result,
+			RedirectAttributes attributes, @AuthenticationPrincipal UsuarioSistema usuarioSistema) {
+		
+		try {
+			cadastroVendaService.cancelar(venda);
+		} catch (AccessDeniedException e){
+			return new ModelAndView("/403");
+		}
+		
+		attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso!");
+		
+		return new ModelAndView("redirect:/vendas/" + venda.getCodigo());
+		
+		
 	}
 
 	//Método que retorna a página de tabela-itens-venda
@@ -178,5 +214,11 @@ public class VendasController {
 		venda.calcularValorTotal();
 		
 		vendaValidator.validate(venda, result);
+	}
+	
+	private void setUuid(Venda venda) {
+		if(StringUtils.isEmpty(venda.getUuid())) {
+			venda.setUuid(UUID.randomUUID().toString());//ID para o formulário na página de vendas (para cada tela)
+		}
 	}
 }

@@ -3,7 +3,9 @@ package br.com.baiocchilousa.brewer.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +19,7 @@ import br.com.baiocchilousa.brewer.security.AppUserDetailsService;
 
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = AppUserDetailsService.class)
+@EnableGlobalMethodSecurity(prePostEnabled = true)//Permite colocar a anotação @PreAuthorize nos metodos para testar acesso de usuário
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired

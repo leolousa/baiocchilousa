@@ -1,5 +1,6 @@
 package br.com.baiocchilousa.brewer.repository.helper.cerveja;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,4 +20,8 @@ public interface CervejasQueries {
 	public Page<Cerveja> filtrar(CervejaFilter filtro, Pageable pageable);
 	
 	public List<CervejaDTO> porSkuOuNome(String skuOuNome);
+	
+	public BigDecimal valorEstoque();
+	
+	public BigDecimal itensEstoque();
 }

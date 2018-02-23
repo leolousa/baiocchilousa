@@ -73,6 +73,7 @@ public class UsuarioRepositoryImpl implements UsuariosQueries{
 		return new PageImpl<>(filtrados, pageable, total(filtro));
 	}
 
+	//Método que trás os usuários com o grupos também
 	@Transactional(readOnly = true)
 	@Override
 	public Usuario buscarComGrupos(Long codigo) {

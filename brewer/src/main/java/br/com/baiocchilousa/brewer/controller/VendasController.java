@@ -1,5 +1,6 @@
 package br.com.baiocchilousa.brewer.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +21,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.baiocchilousa.brewer.controller.page.PageWrapper;
 import br.com.baiocchilousa.brewer.controller.validator.VendaValidator;
+import br.com.baiocchilousa.brewer.dto.VendaMes;
 import br.com.baiocchilousa.brewer.mail.Mailer;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 import br.com.baiocchilousa.brewer.model.ItemVenda;
@@ -197,8 +200,12 @@ public class VendasController {
 		attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso!");
 		
 		return new ModelAndView("redirect:/vendas/" + venda.getCodigo());
-		
-		
+	}
+	
+	//
+	@GetMapping("/total-por-mes")
+	public @ResponseBody List<VendaMes> listarTotalVendasPorMes() {
+		return vendas.totalPorMes();
 	}
 
 	//Método que retorna a página de tabela-itens-venda

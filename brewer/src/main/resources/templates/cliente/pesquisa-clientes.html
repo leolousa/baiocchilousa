@@ -68,10 +68,11 @@
 							<td class="text-left" th:text="${cliente.telefone}">(11)99279-4831</td>
 							<td class="text-left" th:text="${cliente.endereco.nomeCidadeSiglaEstado}">São Paulo/SP</td>
 							<td class="text-center">
-								<a class="btn  btn-link  btn-xs" title="Editar"> 
+								<a class="btn  btn-link  btn-xs  js-tooltip" title="Editar"
+								 th:href="@{clientes/{codigo}(codigo=${cliente.codigo})}"> 
 									<i class="glyphicon glyphicon-pencil"></i>
 								</a>
-								<a class="btn  btn-link  btn-xs" title="Excluir">
+								<a class="btn  btn-link  btn-xs  js-tooltip" title="Excluir">
 									<i class="glyphicon glyphicon-remove"></i>
 								</a>
 							</td>

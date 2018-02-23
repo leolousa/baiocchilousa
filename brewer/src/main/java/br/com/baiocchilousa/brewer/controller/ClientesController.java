@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -73,7 +74,7 @@ public class ClientesController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(ClienteFilter clienteFilter, BindingResult result,
-			@PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest) {
+			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("cliente/pesquisa-clientes");
 		
 		PageWrapper<Cliente> paginaWrapper = new PageWrapper<>(clientes.filtrar(clienteFilter, pageable), httpServletRequest);
@@ -88,6 +89,15 @@ public class ClientesController {
 		return clientes.findByNomeStartingWithIgnoreCase(nome);
 		
 	}
+	
+	@GetMapping("/{codigo}")
+	public ModelAndView editar(@PathVariable Long codigo) {
+		Cliente cliente = clientes.findOne(codigo);
+		ModelAndView mv = novo(cliente);
+		mv.addObject(cliente);
+		return mv;
+	}
+	
 
 	//Método para validar a entrada da pesquisa rápida
 	private void validarTamanhoDoNome(String nome) {

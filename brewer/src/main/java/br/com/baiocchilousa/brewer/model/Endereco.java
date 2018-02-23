@@ -6,7 +6,11 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-
+/**
+ * Classe criada para ...
+ * @author leolo
+ *
+ */
 @Embeddable
 public class Endereco implements Serializable{
 

@@ -1,6 +1,9 @@
 package br.com.baiocchilousa.brewer.repository.helper.cerveja;
 
+import java.math.BigDecimal;
+import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import br.com.baiocchilousa.brewer.dto.CervejaDTO;
 import br.com.baiocchilousa.brewer.model.Cerveja;
+import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.repository.filter.CervejaFilter;
 import br.com.baiocchilousa.brewer.repository.paginacao.PaginacaoUtil;
 
@@ -118,6 +122,19 @@ public class CervejaRepositoryImpl implements CervejasQueries {
 		
 		return cervejasFiltradas;
 	}
-	
-	
+
+	@Override
+	public BigDecimal valorEstoque() {
+
+		//TODO Implementar
+		return BigDecimal.ZERO;
+	}
+
+
+	@Override
+	public BigDecimal itensEstoque() {
+
+		//TODO Implementar
+		return BigDecimal.ZERO;
+	}
 }

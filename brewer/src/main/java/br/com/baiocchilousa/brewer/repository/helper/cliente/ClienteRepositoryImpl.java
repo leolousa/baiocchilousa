@@ -48,12 +48,6 @@ public class ClienteRepositoryImpl implements ClientesQueries {
 		return new PageImpl<>(criteria.list(), pageable, total(filtro));
 	}
 
-	@Override
-	public Integer qtdeClientes() {
-		// TODO Implementar
-		return 0;
-	}
-	
 	
 	
 	private Long total(ClienteFilter filtro) {

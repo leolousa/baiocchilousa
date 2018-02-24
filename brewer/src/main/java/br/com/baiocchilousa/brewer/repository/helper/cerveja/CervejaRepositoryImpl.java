@@ -1,9 +1,6 @@
 package br.com.baiocchilousa.brewer.repository.helper.cerveja;
 
-import java.math.BigDecimal;
-import java.time.Year;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import br.com.baiocchilousa.brewer.dto.CervejaDTO;
+import br.com.baiocchilousa.brewer.dto.ValorItensEstoque;
 import br.com.baiocchilousa.brewer.model.Cerveja;
-import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.repository.filter.CervejaFilter;
 import br.com.baiocchilousa.brewer.repository.paginacao.PaginacaoUtil;
 
@@ -61,7 +58,25 @@ public class CervejaRepositoryImpl implements CervejasQueries {
 		
 		return new PageImpl<>(criteria.list(), pageable, total(filtro));
 	}
+	
+	@Override
+	public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
+		
+		String jpql = "SELECT new br.com.baiocchilousa.brewer.dto.CervejaDTO(codigo, sku, nome, origem, valor, foto) "
+				+ "FROM Cerveja WHERE lower(sku) LIKE lower(:skuOuNome) OR lower(nome) LIKE lower(:skuOuNome)";
+		
+		List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
+				.setParameter("skuOuNome", skuOuNome + "%")
+				.getResultList();
+		
+		return cervejasFiltradas;
+	}
 
+	@Override
+	public ValorItensEstoque valorItensEstoque() {
+		String query = "select new br.com.baiocchilousa.brewer.dto.ValorItensEstoque(sum(valor * quantidadeEstoque), sum(quantidadeEstoque)) from Cerveja";
+		return manager.createQuery(query, ValorItensEstoque.class).getSingleResult();
+	}
 	
 	private Long total(CervejaFilter filtro) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
@@ -100,41 +115,15 @@ public class CervejaRepositoryImpl implements CervejasQueries {
 			if(filtro.getValorAte() != null) {
 				criteria.add(Restrictions.le("valor", filtro.getValorAte()));
 			}
+			
+			criteria.add(Restrictions.gt("quantidadeEstoque", 0));
 
 		}
 	}
 
-
+	
 	private boolean isEstiloPresente(CervejaFilter filtro) {
 		return filtro.getEstilo() != null && filtro.getEstilo().getCodigo() != null;
 	}
 
-
-	@Override
-	public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
-		
-		String jpql = "SELECT new br.com.baiocchilousa.brewer.dto.CervejaDTO(codigo, sku, nome, origem, valor, foto) "
-				+ "FROM Cerveja WHERE lower(sku) LIKE lower(:skuOuNome) OR lower(nome) LIKE lower(:skuOuNome)";
-		
-		List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
-				.setParameter("skuOuNome", skuOuNome + "%")
-				.getResultList();
-		
-		return cervejasFiltradas;
-	}
-
-	@Override
-	public BigDecimal valorEstoque() {
-
-		//TODO Implementar
-		return BigDecimal.ZERO;
-	}
-
-
-	@Override
-	public BigDecimal itensEstoque() {
-
-		//TODO Implementar
-		return BigDecimal.ZERO;
-	}
 }

@@ -80,7 +80,7 @@ public class EstilosController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(EstiloFilter estiloFilter, BindingResult result,
-			@PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest) {
+			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("estilo/pesquisa-estilos");
 		
 		//System.out.println(">>> page number: " + pageable.getPageNumber());

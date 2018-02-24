@@ -12,7 +12,7 @@ import br.com.baiocchilousa.brewer.repository.filter.ClienteFilter;
  *
  */
 public interface ClientesQueries {
-	public Page<Cliente> filtrar(ClienteFilter filtro, Pageable pageable);
 	
-	public Integer qtdeClientes();
+	public Page<Cliente> filtrar(ClienteFilter filtro, Pageable pageable);
+
 }

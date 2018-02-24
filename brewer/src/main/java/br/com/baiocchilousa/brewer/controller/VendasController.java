@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.baiocchilousa.brewer.controller.page.PageWrapper;
 import br.com.baiocchilousa.brewer.controller.validator.VendaValidator;
 import br.com.baiocchilousa.brewer.dto.VendaMes;
+import br.com.baiocchilousa.brewer.dto.VendaOrigem;
 import br.com.baiocchilousa.brewer.mail.Mailer;
 import br.com.baiocchilousa.brewer.model.Cerveja;
 import br.com.baiocchilousa.brewer.model.ItemVenda;
@@ -202,10 +203,16 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/" + venda.getCodigo());
 	}
 	
-	//
+	//URL do gráfico de Vendas por Mes
 	@GetMapping("/total-por-mes")
 	public @ResponseBody List<VendaMes> listarTotalVendasPorMes() {
 		return vendas.totalPorMes();
+	}
+	
+	//URL do gráfico de Vendas por Origem
+	@GetMapping("/total-por-origem")
+	public @ResponseBody List<VendaOrigem> listarTotalVendasPorOrigem() {
+		return vendas.totalPorOrigem();
 	}
 
 	//Método que retorna a página de tabela-itens-venda

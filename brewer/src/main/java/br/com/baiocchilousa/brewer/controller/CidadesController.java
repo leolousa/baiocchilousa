@@ -85,7 +85,7 @@ public class CidadesController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(CidadeFilter cidadeFilter, BindingResult result,
-			@PageableDefault(size = 5) Pageable pageable, HttpServletRequest httpServletRequest) {
+			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("cidade/pesquisa-cidades");
 		mv.addObject("estados", estados.findAll());
 		

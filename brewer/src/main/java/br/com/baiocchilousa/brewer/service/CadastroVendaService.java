@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.baiocchilousa.brewer.model.StatusVenda;
 import br.com.baiocchilousa.brewer.model.Venda;
 import br.com.baiocchilousa.brewer.repository.VendaRepository;
+import br.com.baiocchilousa.brewer.service.event.venda.VendaEvent;
 
 /**
  * Classe de serviços (regras de negócio costumam ficar nesta classe) 
@@ -22,6 +24,9 @@ public class CadastroVendaService {
 
 	@Autowired
 	private VendaRepository vendas;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	
 	@Transactional
 	public Venda salvar(Venda venda){
@@ -50,6 +55,8 @@ public class CadastroVendaService {
 
 		venda.setStatus(StatusVenda.EMITIDA);
 		salvar(venda);
+		
+		publisher.publishEvent(new VendaEvent(venda));
 	}
 	
 	

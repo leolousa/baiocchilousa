@@ -28,9 +28,8 @@ public class DashboardController {
 		mv.addObject("vendasNoAno", vendas.vendasNoAno());
 		mv.addObject("vendasNoMes", vendas.vendasNoMes());
 		mv.addObject("ticketMedio", vendas.valorTicketMedioNoAno());
-		mv.addObject("valorEstoque", cervejas.valorEstoque());
-		mv.addObject("itensEstoque", cervejas.itensEstoque());
-		mv.addObject("totalClientes", clientes.qtdeClientes());
+		mv.addObject("valorItensEstoque", cervejas.valorItensEstoque());
+		mv.addObject("totalClientes", clientes.count());
 		
 		return mv;
 	}

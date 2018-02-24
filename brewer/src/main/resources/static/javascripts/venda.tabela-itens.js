@@ -101,11 +101,3 @@ Brewer.TabelaItens = (function() {
 	
 	
 }());
-
-$(function() {
-	var autocomplete = new Brewer.Autocomplete();
-	autocomplete.iniciar();
-	
-	var tabelaItens = new Brewer.TabelaItens(autocomplete);
-	tabelaItens.iniciar();
-})

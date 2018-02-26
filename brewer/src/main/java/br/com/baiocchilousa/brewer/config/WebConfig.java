@@ -2,7 +2,6 @@ package br.com.baiocchilousa.brewer.config;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
@@ -19,16 +18,19 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
-import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.FixedLocaleResolver;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -40,6 +42,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.google.common.cache.CacheBuilder;
 
+import br.com.baiocchilousa.brewer.config.format.BigDecimalFormatter;
 import br.com.baiocchilousa.brewer.controller.CervejasController;
 import br.com.baiocchilousa.brewer.controller.converter.CidadeConverter;
 import br.com.baiocchilousa.brewer.controller.converter.EstadoConverter;
@@ -126,12 +129,18 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		//Formata a classe Grupo
 		conversionService.addConverter(new GrupoConverter());
 		
-		//Formata o bigdecimal
-		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
-		conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);
+		//Formata o bigdecimal para todo o sistema - Problemas quando temos locales diferentes
+		//NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
+		
+		//Formata o inteiro para todo o sistema - Problemas quando temos locales diferentes
+		//NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
 
-		//Formata o inteiro
-		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
+		//Formata o bigdecimal com um formatador customizado
+		BigDecimalFormatter bigDecimalFormatter = new BigDecimalFormatter("#,##0.00");
+		conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);
+		
+		//Formata o integer com um formatador customizado o próprio BigDecimalFormatter
+		BigDecimalFormatter integerFormatter = new BigDecimalFormatter("#,##0");
 		conversionService.addFormatterForFieldType(Integer.class, integerFormatter);
 		
 		//Formata a data para dd/MM/yyyy - Brasil - API de Datas do Java 8
@@ -142,11 +151,12 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		
 		return conversionService;
 	}
-	
-	@Bean
-	public LocaleResolver localeResolver(){
-		return new FixedLocaleResolver(new Locale("pt", "BR"));
-	}
+
+	//Fixa o português como sendo o locale principal
+//	@Bean
+//	public LocaleResolver localeResolver(){
+//		return new FixedLocaleResolver(new Locale("pt", "BR"));
+//	}
 	
 	@Bean
 	public CacheManager cacheManager() {
@@ -172,5 +182,31 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	@Bean
 	public DomainClassConverter<FormattingConversionService> domainClassConverter() {
 		return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
+	}
+	
+	//Bean criado para passar a localização dos arquivos de tradução messages.properties
+	@Bean
+	public LocalValidatorFactoryBean validator() {
+	    LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+	    validatorFactoryBean.setValidationMessageSource(messageSource());
+	    
+	    return validatorFactoryBean;
+	}
+
+	@Override
+	public Validator getValidator() {
+		return validator();
+	}
+	
+	
+	//Métodos para trocar o idioma dinamicamente armazenando em Cookie é necessário criar o link passando o locale ex: locale=en_US
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+	  registry.addInterceptor(new LocaleChangeInterceptor());
+	}
+
+	@Bean
+	public LocaleResolver localeResolver(){
+	  return new CookieLocaleResolver();
 	}
 }

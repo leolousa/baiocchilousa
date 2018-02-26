@@ -1,4 +1,4 @@
-package br.com.baiocchilousa.brewer.config;
+	package br.com.baiocchilousa.brewer.config;
 
 import java.util.Properties;
 
@@ -15,13 +15,18 @@ import br.com.baiocchilousa.brewer.mail.Mailer;
 
 /**
  * Clase que configura o Java Mail
+ * Variável ambiente: ambiente
+ * 
  * @author leolo
  *
  */
 @Configuration
 @ComponentScan(basePackageClasses = Mailer.class)
-@PropertySource({ "classpath:env/mail-${ambiente:local}.properties" })// Seta o local da pasta do arquivo de propriedades
-@PropertySource(value = { "file://${HOME}/.brewer-mail.properties" }, ignoreResourceNotFound = true)// Seta o local na Home do usuário da pasta do arquivo de propriedades
+//Seta o local da pasta do arquivo de propriedades com as configurações do e-mail - (se não informar default:'local').
+//@PropertySource({ "classpath:env/mail-${ambiente:local}.properties" })
+
+//${USERPROFILE}. Seta o local na Home do usuário da pasta do arquivo de propriedades
+@PropertySource(value = { "file:\\${USERPROFILE}\\brewer\\.brewer-mail.properties" }, ignoreResourceNotFound = true)
 public class MailConfig {
 	
 	@Autowired

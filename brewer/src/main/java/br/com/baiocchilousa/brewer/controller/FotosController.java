@@ -15,7 +15,9 @@ import br.com.baiocchilousa.brewer.storage.FotoStorage;
 import br.com.baiocchilousa.brewer.storage.FotoStorageRunnable;
 
 /**
- * Classe que permite fazer o Upload de uma foto de maneira assincrona sem travar a Tread no servidor
+ * Classe que permite fazer o Upload de uma foto de maneira assincrona sem
+ * travar a Tread no servidor
+ * 
  * @author leolo
  *
  */
@@ -23,25 +25,20 @@ import br.com.baiocchilousa.brewer.storage.FotoStorageRunnable;
 @RestController
 @RequestMapping("/fotos")
 public class FotosController {
-	
+
 	@Autowired
 	private FotoStorage fotoStorage;
 
 	@PostMapping
-	public DeferredResult<FotoDTO> upload(@RequestParam("files[]") MultipartFile[] files){
+	public DeferredResult<FotoDTO> upload(@RequestParam("files[]") MultipartFile[] files) {
 		DeferredResult<FotoDTO> resultado = new DeferredResult<>();
-		
+
 		Thread thread = new Thread(new FotoStorageRunnable(files, resultado, fotoStorage));
 		thread.start();
-		
+
 		return resultado;
 	}
-	
-	@GetMapping("/temp/{nome:.*}")
-	public byte[] recuperarFotoTemporaria(@PathVariable String nome) {
-		return fotoStorage.recuperarFotoTemporaria(nome);
-	}
-	
+
 	@GetMapping("/{nome:.*}")
 	public byte[] recuperar(@PathVariable String nome) {
 		return fotoStorage.recuperar(nome);

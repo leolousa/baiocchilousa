@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -24,10 +25,12 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.StringUtils;
 
+import br.com.baiocchilousa.brewer.repository.listener.CervejaEntityListener;
 import br.com.baiocchilousa.brewer.validation.SKU;
 
 
 
+@EntityListeners(CervejaEntityListener.class)//Para setar a url das fotos de Cerveja
 @Entity
 @Table(name="cerveja")
 public class Cerveja {
@@ -37,7 +40,8 @@ public class Cerveja {
 	private Long codigo;
 	
 	@SKU
-	@NotBlank(message = "O SKU é obrigatório")
+	//@NotBlank(message = "O SKU é obrigatório") Comummente usado
+	@NotBlank //Usado com o arquivo message.properties
 	private String sku;
 	
 	@NotBlank(message = "O nome é obrigatório")
@@ -91,12 +95,24 @@ public class Cerveja {
 	@Transient
 	private boolean novaFoto;
 	
+	@Transient
+	private String urlFoto;
+	
+	@Transient
+	private String urlThumbnailFoto;
+	
 	
 	//Método callback do JPA para ser executado antes de inserir ou atualizar no banco
 	@PrePersist @PreUpdate
 	private void prePersistUpdate(){
 		sku = sku.toUpperCase();
 	}
+	
+	//Método get para retornar a foto ou uma imagem mocada da cerveja
+	public String getFotoOuMock() {
+		return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
+	}
+	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -189,10 +205,7 @@ public class Cerveja {
 		return foto;
 	}
 	
-	//Método get para retornar a foto ou uma imagem mocada da cerveja
-	public String getFotoOuMock() {
-		return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
-	}
+	
 	
 	public void setFoto(String foto) {
 		this.foto = foto;
@@ -206,10 +219,34 @@ public class Cerveja {
 		this.contentType = contentType;
 	}
 	
-	
 	public boolean temFoto() {
 		return !StringUtils.isEmpty(this.foto);
 	}
+
+	public boolean isNovaFoto() {
+		return novaFoto;
+	}
+	
+	public void setNovaFoto(boolean novaFoto) {
+		this.novaFoto = novaFoto;
+	}
+	
+	public String getUrlFoto() {
+		return urlFoto;
+	}
+	
+	public void setUrlFoto(String urlFoto) {
+		this.urlFoto = urlFoto;
+	}
+	
+	public String getUrlThumbnailFoto() {
+		return urlThumbnailFoto;
+	}
+	
+	public void setUrlThumbnailFoto(String urlThumbnailFoto) {
+		this.urlThumbnailFoto = urlThumbnailFoto;
+	}
+	
 	
 	@Override
 	public int hashCode() {
@@ -235,12 +272,7 @@ public class Cerveja {
 			return false;
 		return true;
 	}
-	public boolean isNovaFoto() {
-		return novaFoto;
-	}
-	public void setNovaFoto(boolean novaFoto) {
-		this.novaFoto = novaFoto;
-	}
+
 	
 	
 

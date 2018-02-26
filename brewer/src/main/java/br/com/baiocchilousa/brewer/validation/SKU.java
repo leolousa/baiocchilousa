@@ -22,7 +22,7 @@ import javax.validation.constraints.Pattern;
 public @interface SKU {
 	
 	@OverridesAttribute(constraint = Pattern.class, name = "message")
-	String message() default "SKU deve seguir o padrão XX9999";
+	String message() default "{br.com.baiocchilousa.constraints.SKU.message}";// Indica a mensagem a ser apresentada descrita no arquivo message.properties
 
 	Class<?>[] groups() default {};//Propriedade para agrupar validações
 	Class<? extends Payload>[] payload() default {};//Propriedades para carregar mais informações da anotação

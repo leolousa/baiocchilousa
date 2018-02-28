@@ -21,6 +21,7 @@ public class SecurityInitializer extends AbstractSecurityWebApplicationInitializ
 		
 		//Configura o tempo de sessão em segundos - Sempre expira após o período definido!
 		//Usar o web.xml para configurar a sessão inativa!
+		
 		//servletContext.getSessionCookieConfig().setMaxAge(20);
 
 		//Usar a definição de sessão JSESSION_ID com COOKIES

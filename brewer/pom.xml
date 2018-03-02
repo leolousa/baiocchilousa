@@ -40,7 +40,7 @@
 
 		<!-- Thymeleaf - Extras Spring Security -->
 		<thymeleaf-extras-springsecurity.version>3.0.0.RELEASE</thymeleaf-extras-springsecurity.version>
-		
+
 		<!-- Bean Validation / Hibernate Validator -->
 		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
 
@@ -81,7 +81,13 @@
 
 		<!-- Apache Commons DBCP Para uso do BasicDataSource Connection pool -->
 		<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+		
+		<!-- JasperReports -->
+		<jasperreports.version>6.3.0</jasperreports.version>
 
+		<!-- JasperReports Fonts -->
+		<jasperreports-fonts.version>6.0.0</jasperreports-fonts.version>
+	
 	</properties>
 
 	<build>
@@ -369,6 +375,21 @@
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${commons-dbcp2.version}</version>
 			<scope>compile</scope>
+		</dependency>
+		
+		<!-- JasperReports -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasperreports.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports-fonts</artifactId>
+		    <version>${jasperreports-fonts.version}</version>
+		    <scope>compile</scope>
 		</dependency>
 	</dependencies>
 

@@ -9,7 +9,7 @@
 			select date_format(data_criacao, '%Y/%m') mes
 				 , count(*) total
   			from venda
-  			where data_criacao > DATE_SUB(NOW(), INTERVAL 6 MONTH)
+  			where data_criacao > DATE_SUB(NOW(), INTERVAL 52 MONTH)
   			  and status = 'EMITIDA'
 			group by date_format(data_criacao, '%Y/%m')   
 			order by date_format(data_criacao, '%Y/%m') desc

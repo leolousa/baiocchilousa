@@ -24,7 +24,13 @@
 		<mysql-connector-java.version>5.1.39</mysql-connector-java.version>
 
 		<!-- Spring MVC -->
-		<spring-framework.version>4.3.0.RELEASE</spring-framework.version>
+		<spring-framework.version>5.0.4.RELEASE</spring-framework.version>
+
+		<!-- Spring Data JPA -->
+		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
+
+		<!-- Spring Security -->
+		<spring-security.version>4.1.1.RELEASE</spring-security.version>
 
 		<!-- Servlet API -->
 		<servlet.version>3.1.0</servlet.version>
@@ -45,30 +51,21 @@
 		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
 
 		<!-- Logging -->
-		<log4j.version>2.6</log4j.version>
+		<log4j.version>2.10.0</log4j.version>
 		<jcl-over-slf4j.version>1.7.21</jcl-over-slf4j.version>
 
 		<!-- JPA / Hibernate -->
 		<hibernate.version>5.1.0.Final</hibernate.version>
 
-		<!-- Spring Data JPA -->
-		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
-
 		<!-- Jackson - JSON -->
-		<jackson-core.version>2.7.5</jackson-core.version>
+		<jackson-core.version>2.9.4</jackson-core.version>
 
 		<!-- thumbnailator - Gerar Thumbnail -->
 		<!-- https://github.com/coobird/thumbnailator -->
 		<thumbnailator.version>0.4.8</thumbnailator.version>
 
-		<!-- Cache - Guava -->
-		<guava.version>20.0</guava.version>
-
 		<!-- Apache Bean Utils -->
 		<commons-beanutils.version>1.9.2</commons-beanutils.version>
-
-		<!-- Spring Security -->
-		<spring-security.version>4.1.1.RELEASE</spring-security.version>
 
 		<!-- JUnit -->
 		<junit.version>4.12</junit.version>
@@ -81,13 +78,18 @@
 
 		<!-- Apache Commons DBCP Para uso do BasicDataSource Connection pool -->
 		<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
-		
+
 		<!-- JasperReports -->
 		<jasperreports.version>6.3.0</jasperreports.version>
 
 		<!-- JasperReports Fonts -->
 		<jasperreports-fonts.version>6.0.0</jasperreports-fonts.version>
-	
+		
+		<!-- EhCache -->
+		<ehcache.version>3.4.0</ehcache.version>
+		
+		<!-- JCache -->
+		<jcache.version>1.0.0</jcache.version>
 	</properties>
 
 	<build>
@@ -300,14 +302,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- Cache - Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- Spring Context Support -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -376,7 +370,7 @@
 			<version>${commons-dbcp2.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- JasperReports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -384,13 +378,28 @@
 			<version>${jasperreports.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-fonts</artifactId>
-		    <version>${jasperreports-fonts.version}</version>
-		    <scope>compile</scope>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>${jasperreports-fonts.version}</version>
+			<scope>compile</scope>
 		</dependency>
+
+		<!-- EhCache -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>${ehcache.version}</version>
+		</dependency>
+
+		<!-- JCache -->
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>${jcache.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

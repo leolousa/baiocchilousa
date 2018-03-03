@@ -3,6 +3,7 @@ package br.com.baiocchilousa.brewer.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
@@ -19,6 +20,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
  * @author leolo
  *
  */
+@Profile("prod")
 @Configuration
 //${USERPROFILE}. Seta o local na Home do usuário da pasta do arquivo de propriedades
 @PropertySource(value = { "file:\\${USERPROFILE}\\brewer\\.brewer-s3.properties" })

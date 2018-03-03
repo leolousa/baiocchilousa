@@ -1,0 +1,9 @@
+Variáveis do Servidor (Enviroment):
+
+- ambiente local
+- spring.profiles.ative prod
+
+Perfil das classes
+
+S3Config.class
+@PropertySource(value = { "file:\\${USERPROFILE}\\brewer\\.brewer-s3.properties" })

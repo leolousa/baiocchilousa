@@ -1,15 +1,16 @@
 package br.com.baiocchilousa.brewer.config;
 
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeUnit;
 
-import javax.sql.DataSource;
+import javax.cache.Caching;
 
 import org.springframework.beans.BeansException;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -30,11 +31,9 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -44,7 +43,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-import com.google.common.cache.CacheBuilder;
 
 import br.com.baiocchilousa.brewer.config.format.BigDecimalFormatter;
 import br.com.baiocchilousa.brewer.controller.CervejasController;
@@ -62,7 +60,7 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 @EnableSpringDataWebSupport
 @EnableCaching //Habilita a implementação do cache no Spring
 @EnableAsync //Habilita os métodos assíncronos
-public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
+public class WebConfig implements ApplicationContextAware, WebMvcConfigurer{
 
 	private ApplicationContext applicationContext;
 	
@@ -71,19 +69,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		this.applicationContext = applicationContext;
 	}
 	
-	//ViewResolver dos relatórios
-	@Bean
-	public ViewResolver jasperReportsViewResolver(DataSource dataSource) {
-		JasperReportsViewResolver resolver = new JasperReportsViewResolver();
-		resolver.setPrefix("classpath:/relatorios/");
-		resolver.setSuffix(".jasper");
-		resolver.setViewNames("relatorio_*");
-		resolver.setViewClass(JasperReportsMultiFormatView.class);
-		resolver.setJdbcDataSource(dataSource);
-		resolver.setOrder(0);
-		return resolver;
-	}
-
 	//ViewResolver das páginas da aplicação
 	@Bean
 	public ViewResolver viewResolver() {
@@ -171,24 +156,21 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		
 		return conversionService;
 	}
-
-	//Fixa o português como sendo o locale principal
-//	@Bean
-//	public LocaleResolver localeResolver(){
-//		return new FixedLocaleResolver(new Locale("pt", "BR"));
-//	}
 	
+	/**
+	 * Método que configura o cache da aplicação especificado pelo JCache e implementado
+	 * com EhCahe - Usado no carregamento do combo de cidades no cadastro de clientes.
+	 * @return JCacheCacheManager
+	 * @throws Exception
+	 */
 	@Bean
-	public CacheManager cacheManager() {
-		
-		CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
-				.maximumSize(3) // Número de Entradas no cache
-				.expireAfterAccess(20, TimeUnit.SECONDS); //Tempo de expiração do cache
-		
-		GuavaCacheManager cacheManager = new GuavaCacheManager();
-		cacheManager.setCacheBuilder(cacheBuilder);
-		return cacheManager;
+	public CacheManager cacheManager() throws Exception {
+		return new JCacheCacheManager(Caching.getCachingProvider().getCacheManager(
+				getClass().getResource("/cache/ehcache.xml").toURI(), 
+				getClass().getClassLoader()));
 	}
+	
+	
 
 	@Bean
 	public MessageSource messageSource() {

@@ -1,12 +1,9 @@
 package br.com.baiocchilousa.brewer.controller;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+import org.apache.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.baiocchilousa.brewer.dto.PeriodoRelatorio;
+import br.com.baiocchilousa.brewer.service.RelatorioService;
 
 @Controller
 @RequestMapping("/relatorios")
 public class RelatoriosController {
 
+	@Autowired
+	private RelatorioService relatorioService;
+	
 	@GetMapping("/vendas-emitidas")
 	public ModelAndView relatorioVendasEmitidas() {
 		ModelAndView mv = new ModelAndView("relatorio/RelatorioVendasEmitidas");
@@ -29,20 +30,14 @@ public class RelatoriosController {
 	}
 	
 	@PostMapping("/vendas-emitidas")
-	public ModelAndView gerarRelatorioVendasEmitidas(PeriodoRelatorio periodoRelatorio) {
+	public ResponseEntity<byte[]> gerarRelatorioVendasEmitidas(PeriodoRelatorio periodoRelatorio) throws Exception {
 		
-		//Criamos uma mapa para os parâmetros do relatório
-		Map<String, Object> parametros = new HashMap<>();
+		byte[] relatorio = relatorioService.gerarRelatorioVendasEmitidas(periodoRelatorio);
 		
-		Date dataInicio = Date.from(LocalDateTime.of(periodoRelatorio.getDataInicio(), LocalTime.of(0, 0, 0))
-				.atZone(ZoneId.systemDefault()).toInstant());
-		Date dataFim = Date.from(LocalDateTime.of(periodoRelatorio.getDataFim(), LocalTime.of(23, 59, 59))
-				.atZone(ZoneId.systemDefault()).toInstant());
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+				.body(relatorio);
 		
-		parametros.put("format", "pdf");//Formato de saída do relatório
-		parametros.put("data_inicio", dataInicio);//Parâmetro 'data_inicio' dentro do relatório
-		parametros.put("data_fim", dataFim);//Parâmetro 'data_fim' dentro do relatório
 		
-		return new ModelAndView("relatorio_vendas_emitidas", parametros);
 	}
 }

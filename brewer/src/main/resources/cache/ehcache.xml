@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ARQUIVO DE CONFIGURAÇÃO DO CACHE COM EHCACHE -->
+<ehcache:config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns:ehcache='http://www.ehcache.org/v3'
+	xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.4.xsd">
+
+	<ehcache:cache alias="cidades">
+		<ehcache:expiry>
+			<!-- Tempo de expiração do cache -->
+			<ehcache:tti unit="seconds">20</ehcache:tti>
+		</ehcache:expiry>
+		<ehcache:resources>
+			<!-- Quantidade de entradas no cache ex: Cidades de 3 Estados-->
+			<ehcache:heap unit="entries">3</ehcache:heap>
+		</ehcache:resources>
+	</ehcache:cache>
+</ehcache:config>

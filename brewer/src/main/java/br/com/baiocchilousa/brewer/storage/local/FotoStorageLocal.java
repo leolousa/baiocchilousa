@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,25 +25,19 @@ import net.coobird.thumbnailator.name.Rename;
  * @author leolo
  *
  */
-@Profile("local")
+@Profile("!prod")
 @Component
 public class FotoStorageLocal implements FotoStorage {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FotoStorageLocal.class);
 	private static final String THUMBNAIL_PREFIX = "thumbnail.";
 
+	@Value("${brewer.foto-storage-local.local}")
 	private Path local;
-
-	public FotoStorageLocal() {
-		// Caminho a ser salvo no servidor HOME para Linux
-		this(getDefault().getPath(System.getenv("USERPROFILE"), ".brewerfotos"));
-	}
-
-	public FotoStorageLocal(Path path) {
-		this.local = path;
-		criarPastas();
-	}
-
+	
+	@Value("${brewer.foto-storage-local.url-base}")
+	private String urlBase;
+	
 	@Override
 	public String salvar(MultipartFile[] files) {
 		String novoNome = null;
@@ -95,9 +92,10 @@ public class FotoStorageLocal implements FotoStorage {
 
 	@Override
 	public String getUrl(String foto) {
-		return "http://localhost:8080/brewer/fotos/" + foto;
+		return urlBase + foto;
 	}
 
+	@PostConstruct // Executado logo que o Spring instancia a classe
 	private void criarPastas() {
 
 		try {

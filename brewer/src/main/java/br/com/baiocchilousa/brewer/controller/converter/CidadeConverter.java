@@ -1,10 +1,12 @@
 package br.com.baiocchilousa.brewer.controller.converter;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import br.com.baiocchilousa.brewer.model.Cidade;
 
+@Component
 public class CidadeConverter implements Converter<String, Cidade> {
 
 	@Override

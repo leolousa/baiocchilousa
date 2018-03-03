@@ -4,14 +4,11 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import br.com.baiocchilousa.brewer.mail.Mailer;
 
 /**
  * Clase que configura o Java Mail
@@ -21,11 +18,6 @@ import br.com.baiocchilousa.brewer.mail.Mailer;
  *
  */
 @Configuration
-@ComponentScan(basePackageClasses = Mailer.class)
-//Seta o local da pasta do arquivo de propriedades com as configurações do e-mail - (se não informar default:'local').
-//@PropertySource({ "classpath:env/mail-${ambiente:local}.properties" })
-
-//${USERPROFILE}. Seta o local na Home do usuário da pasta do arquivo de propriedades
 @PropertySource(value = { "file:\\${USERPROFILE}\\brewer\\.brewer-mail.properties" }, ignoreResourceNotFound = true)
 public class MailConfig {
 	
@@ -37,8 +29,8 @@ public class MailConfig {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.sendgrid.net");
 		mailSender.setPort(587);
-		mailSender.setUsername(env.getProperty("email.username"));
-		mailSender.setPassword(env.getProperty("password"));
+		mailSender.setUsername(env.getProperty("brewer.mail.username"));
+		mailSender.setPassword(env.getProperty("brewer.mail.password"));
 		
 		Properties props = new Properties();
 		props.put("mail.transport.protocol", "smtp");

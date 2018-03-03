@@ -27,7 +27,6 @@ import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * Classe de manipulação das fotos no serviço de storage de arquivos S3 da AWS
- * Para trocar o Profile: configure no servidor uma variável de ambiente(spring.profiles.active) para 'prod' 
  * @author leolo
  *
  */

@@ -57,9 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")) //Página de logout
 				.and()
-			.exceptionHandling()//Trata as excessões
-				.accessDeniedPage("/403")
-				.and()
 			.sessionManagement()
 				.invalidSessionUrl("/login")// Tentar fazer POST sem sessão redireciona para a página
 				.maximumSessions(1)//Máximo de sessões para cada usuário

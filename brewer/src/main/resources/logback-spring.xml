@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <logger name="br.com.baiocchi" level="debug" />
+
+	<!-- Só loga os SQL no profile default (desenvolvimento) -->
+    <springProfile name="default">      
+        <logger name="org.hibernate.SQL" level="debug" />
+    </springProfile>
+</configuration>

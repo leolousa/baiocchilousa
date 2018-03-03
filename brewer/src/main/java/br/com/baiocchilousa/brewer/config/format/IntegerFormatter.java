@@ -1,6 +1,5 @@
 package br.com.baiocchilousa.brewer.config.format;
 
-import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +7,17 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
- * Classe de configuração para o BigDecimal
+ * Classe de configuração para o Integer
  */
 @Component
-public class BigDecimalFormatter extends NumberFormatter<BigDecimal>{
+public class IntegerFormatter extends NumberFormatter<Integer>{
 
 	@Autowired
 	private Environment env;
 	
 	@Override
 	public String pattern(Locale locale) {
-		return env.getProperty("bigdecimal.format", "#,##0.00");
+		return env.getProperty("integer.format", "#,##0");
 	}
 
 }

@@ -92,7 +92,7 @@ public class ClientesController {
 	
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo) {
-		Cliente cliente = clientes.findOne(codigo);
+		Cliente cliente = clientes.getOne(codigo);
 		ModelAndView mv = novo(cliente);
 		mv.addObject(cliente);
 		return mv;

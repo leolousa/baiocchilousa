@@ -64,7 +64,7 @@ public class VendasController {
 	
 	@GetMapping("/nova")
 	public ModelAndView nova(Venda venda) {
-		ModelAndView mv = new ModelAndView("/venda/cadastro-venda");
+		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		
 		setUuid(venda);
 
@@ -153,7 +153,7 @@ public class VendasController {
 	@GetMapping
 	public ModelAndView pesquisar(VendaFilter vendaFilter,
 			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
-		ModelAndView mv = new ModelAndView("/venda/pesquisa-vendas");
+		ModelAndView mv = new ModelAndView("venda/pesquisa-vendas");
 		mv.addObject("todosStatus", StatusVenda.values());
 		mv.addObject("tiposPessoa", TipoPessoa.values());
 		

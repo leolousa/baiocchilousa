@@ -46,7 +46,7 @@ public class UsuariosController {
 	@RequestMapping("/novo")
 	public ModelAndView novo(Usuario usuario){
 		ModelAndView mv = new ModelAndView("usuario/cadastro-usuario");
-		mv.addObject("grupos",grupos.findAll());
+		mv.addObject("grupos", grupos.findAll());
 		return mv;
 	}
 	

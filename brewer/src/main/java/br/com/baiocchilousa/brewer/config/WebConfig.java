@@ -8,6 +8,7 @@ import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -28,6 +29,13 @@ public class WebConfig implements WebMvcConfigurer{
 				getClass().getResource("/env/ehcache.xml").toURI(), 
 				getClass().getClassLoader()));
 	}
+	
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+          .addResourceHandler("/webjars/**")
+          .addResourceLocations("/webjars/");
+    }
 	
 //	//Métodos para trocar o idioma dinamicamente armazenando em Cookie é necessário criar o link passando o locale ex: locale=en_US
 //	@Override

@@ -23,7 +23,7 @@ public class DashboardController {
 	
 	
 	@GetMapping("/")
-	public ModelAndView dashborad() {
+	public ModelAndView dashboard() {
 		ModelAndView mv = new ModelAndView("dashboard");
 		mv.addObject("vendasNoAno", vendas.vendasNoAno());
 		mv.addObject("vendasNoMes", vendas.vendasNoMes());

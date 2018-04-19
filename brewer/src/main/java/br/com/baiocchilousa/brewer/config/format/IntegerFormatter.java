@@ -15,7 +15,7 @@ public class IntegerFormatter extends NumberFormatter<Integer>{
 	@Autowired
 	private Environment env;
 	
-	@Override
+	@Override 
 	public String pattern(Locale locale) {
 		return env.getProperty("integer.format", "#,##0");
 	}

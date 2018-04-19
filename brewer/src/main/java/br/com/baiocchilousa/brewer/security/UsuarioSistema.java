@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.User;
 
 import br.com.baiocchilousa.brewer.model.Usuario;
 /**
- * Classe que extende o User do Spring Secutity para que
+ * Classe que extende o User do Spring Security para que
  * possamos incluir outras propriedades neste objeto
  * Ex.: Nome do usuário
  * @author leolo

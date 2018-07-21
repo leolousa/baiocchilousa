@@ -18,39 +18,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.baiocchilousa.algamoney.api.event.RecursoCriadoEvent;
 import br.com.baiocchilousa.algamoney.api.model.Categoria;
-import br.com.baiocchilousa.algamoney.api.repository.CategoriaRepository;
+import br.com.baiocchilousa.algamoney.api.model.Lancamento;
+import br.com.baiocchilousa.algamoney.api.model.Pessoa;
+import br.com.baiocchilousa.algamoney.api.repository.LancamentoRepository;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaResource {
-
+@RequestMapping("/lancamentos")
+public class LancamentoResource {
+    
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    LancamentoRepository lancamentoRepository;
     
     @Autowired
     private ApplicationEventPublisher eventPublisher;
     
     @GetMapping
-    public List<Categoria> listar() {
-        return categoriaRepository.findAll(); 
+    public List<Lancamento> listar() {
+        return lancamentoRepository.findAll(); 
     }
     
     @GetMapping("/{codigo}")
-    public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-        Categoria categoria = categoriaRepository.findById(codigo).orElse(null);        
-        return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();  
+    public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
+        Lancamento lancamento = lancamentoRepository.findById(codigo).orElse(null);        
+        return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();  
     }
     
     @PostMapping
-    public ResponseEntity<Categoria> salvar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
-        Categoria categoriaSalva = categoriaRepository.save(categoria);
-        
+    public ResponseEntity<Lancamento> salvar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+        Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
+
         //Evento para inclusão do Header Location
-        eventPublisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
-        
+        eventPublisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }
-    
-    
 }

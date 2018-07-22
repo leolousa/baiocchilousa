@@ -23,7 +23,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * Classe de tratamento de erros
+ * Classe de tratamento de erros gerais
+ * que qualquer controlador pode lançar.
  * @author leolo
  *
  */

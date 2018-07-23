@@ -46,9 +46,6 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
         return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
     }
 
-
-
-
     private Predicate[] criarRestricoes(LancamentoFilter lancamentoFilter, CriteriaBuilder builder,
             Root<Lancamento> root) {
         

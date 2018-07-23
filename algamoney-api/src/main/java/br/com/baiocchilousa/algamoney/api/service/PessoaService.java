@@ -33,15 +33,10 @@ public class PessoaService {
     }
     
     public Pessoa buscarPessoaPeloCodigo(Long codigo) {
-        Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
-        if(!pessoa.isPresent()) {
+        Pessoa pessoaSalva = pessoaRepository.findOne(codigo);
+        if (pessoaSalva == null) {
             throw new EmptyResultDataAccessException(1);
         }
-        Pessoa pessoaAlterada = pessoa.get();
-        
-        //Copia pessoa para pessoaSalva excetuando o código
-        BeanUtils.copyProperties(pessoa, pessoaAlterada, "codigo");
-        
-        return pessoaAlterada;
+        return pessoaSalva;
     }
 }

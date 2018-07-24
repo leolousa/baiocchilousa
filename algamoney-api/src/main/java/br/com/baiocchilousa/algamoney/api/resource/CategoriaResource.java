@@ -20,6 +20,7 @@ import br.com.baiocchilousa.algamoney.api.event.RecursoCriadoEvent;
 import br.com.baiocchilousa.algamoney.api.model.Categoria;
 import br.com.baiocchilousa.algamoney.api.repository.CategoriaRepository;
 
+
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {

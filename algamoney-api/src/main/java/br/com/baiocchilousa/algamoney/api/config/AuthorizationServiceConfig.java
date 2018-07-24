@@ -32,7 +32,7 @@ public class AuthorizationServiceConfig extends AuthorizationServerConfigurerAda
             .secret("@ngul@r0")
             .scopes("read", "write")
             .authorizedGrantTypes("password", "refresh_token")
-            .accessTokenValiditySeconds(20)//30 min
+            .accessTokenValiditySeconds(1800)//30 min
             .refreshTokenValiditySeconds(3600 * 24);// 1 dia
     }
     

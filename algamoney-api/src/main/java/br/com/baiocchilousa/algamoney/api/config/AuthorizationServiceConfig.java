@@ -9,10 +9,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
- * Classe que representa a autorização da API
+ * Classe que representa a autorização da API com JWT
  * @author leolo
  *
  */
@@ -30,19 +31,29 @@ public class AuthorizationServiceConfig extends AuthorizationServerConfigurerAda
             .withClient("angular")
             .secret("@ngul@r0")
             .scopes("read", "write")
-            .authorizedGrantTypes("password")
-            .accessTokenValiditySeconds(1800);//30 min
+            .authorizedGrantTypes("password", "refresh_token")
+            .accessTokenValiditySeconds(20)//30 min
+            .refreshTokenValiditySeconds(3600 * 24);// 1 dia
     }
     
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
             .tokenStore(tokenStore())
+            .accessTokenConverter(accessTokenConverter())
+            .reuseRefreshTokens(false)
             .authenticationManager(authenticationManager);
     }
     
     @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+        accessTokenConverter.setSigningKey("algaworks");
+        return accessTokenConverter;
+    }
+
+    @Bean
     public TokenStore tokenStore() {
-      return new InMemoryTokenStore();  
+      return new JwtTokenStore(accessTokenConverter());  
     }
 }

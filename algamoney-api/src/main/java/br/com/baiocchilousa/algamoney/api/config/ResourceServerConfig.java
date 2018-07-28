@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -26,14 +29,24 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     
+    @Autowired
+    private UserDetailsService userDetailsService;
+    
     //Método para criar um usuário em memória para testes
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+        
+        //Usuário na memória para testes
+        /*auth.inMemoryAuthentication()
             //.passwordEncoder(NoOpPasswordEncoder.getInstance())
-            .withUser("admin").password("admin").roles("ROLE");
+            .withUser("admin").password("admin").roles("ROLE");*/
+        
+        //Usuário em banco de dados
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        
     }
     
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -47,5 +60,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.stateless(true);
+    }
+
+    //Encoda a senha com BCrypt
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
